@@ -7,7 +7,7 @@ inThisBuild(
       ScmInfo(url("https://github.com/sake92/RxTags"), "scm:git:git@github.com:sake92/RxTags.git")
     ),
     developers := List(
-      Developer("sake92", "Sakib Hadžiavdić", "sakib@sake.ba", url("https://sake.ba")      )
+      Developer("sake92", "Sakib Hadžiavdić", "sakib@sake.ba", url("https://sake.ba"))
     ),
     scalaVersion := "2.13.3",
     skip in publish := true,
@@ -18,10 +18,11 @@ inThisBuild(
 val core = (project in file("core"))
   .settings(
     name := "rxtags",
+    version := "0.0.1-SNAPSHOT",
     skip in publish := false,
     libraryDependencies ++= Seq(
-      "com.lihaoyi" %%% "scalatags" % "0.8.6",
-      "com.outr"    %%% "reactify"  % "4.0.2"
+      "com.lihaoyi" %%% "scalatags" % "0.9.2-rx",
+      "com.outr" %%% "reactify" % "4.0.2"
     )
   )
   .enablePlugins(ScalaJSPlugin)
@@ -32,4 +33,3 @@ val examples = (project in file("examples"))
   )
   .dependsOn(core)
   .enablePlugins(ScalaJSPlugin)
-  
