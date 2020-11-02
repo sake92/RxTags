@@ -10,6 +10,7 @@ inThisBuild(
       Developer("sake92", "Sakib Hadžiavdić", "sakib@sake.ba", url("https://sake.ba")      )
     ),
     scalaVersion := "2.13.3",
+    skip in publish := true,
     scalafmtOnCompile := true
   )
 )
@@ -17,9 +18,18 @@ inThisBuild(
 val core = (project in file("core"))
   .settings(
     name := "rxtags",
+    skip in publish := false,
     libraryDependencies ++= Seq(
       "com.lihaoyi" %%% "scalatags" % "0.8.6",
       "com.outr"    %%% "reactify"  % "4.0.2"
     )
   )
   .enablePlugins(ScalaJSPlugin)
+
+val examples = (project in file("examples"))
+  .settings(
+    scalaJSUseMainModuleInitializer := true
+  )
+  .dependsOn(core)
+  .enablePlugins(ScalaJSPlugin)
+  

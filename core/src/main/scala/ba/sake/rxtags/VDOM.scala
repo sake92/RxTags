@@ -16,16 +16,18 @@ object VDOM {
       maybeNewNode: Option[Frag] = None,
       maybeOldNode: Option[Frag] = None,
       oldNodeIdx: Int = 0
-  ): Unit =
+  ): Unit = {
+    println("updateElement", parent, maybeNewNode, maybeOldNode, oldNodeIdx)
     (maybeNewNode, maybeOldNode) match {
-      case (Some(newNode), None) => parent.appendChild(
-          createElement(newNode)
-        )
-      case (None, _) => parent.removeChild(
-          parent.childNodes(oldNodeIdx)
-        )
+      case (Some(newNode), None) =>
+        val newElement = createElement(newNode)
+        parent.appendChild(newElement)
+      case (None, _) =>
+        val removeElement = parent.childNodes(oldNodeIdx)
+        parent.removeChild(removeElement)
       case (Some(newNode), Some(oldNode)) =>
         if (didChange(newNode, oldNode)) {
+
           parent.replaceChild(
             createElement(newNode),
             parent.childNodes(oldNodeIdx)
@@ -58,6 +60,7 @@ object VDOM {
           }
         }
     }
+  }
 
   def didChange(newNode: Frag, oldNode: Frag): Boolean =
     if (newNode.getClass != oldNode.getClass) true
