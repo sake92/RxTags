@@ -5,93 +5,136 @@ import org.scalajs.dom.raw.Node
 import scalatags.JsDom.all._
 
 /**
-  * Stolen from https://medium.com/@deathmood/how-to-write-your-own-virtual-dom-ee74acc13060
+  * Adaptation from https://medium.com/@deathmood/how-to-write-your-own-virtual-dom-ee74acc13060
   */
 object VDOM {
-
-  def createElement(content: Frag): Node = content.render
 
   def updateElement(
       parent: Node,
       maybeNewFrag: Option[Frag],
       maybeOldFrag: Option[Frag],
-      oldNodeIdx: Int
-  ): Unit = {
-    //println("updateElement", parent, maybeNewFrag, maybeOldFrag, oldNodeIdx)
-
-    def handleChildren(newTag: HtmlTag, oldTag: HtmlTag): Unit = {
-      val newNodeChildren = newTag.modifiers.flatten
-      val oldNodeChildren = oldTag.modifiers.flatten
-      val (newAttrPairs, newChildrenFrags) = newNodeChildren.partition(_.isInstanceOf[AttrPair])
-      val (_, oldChildrenFrags) = oldNodeChildren.partition(_.isInstanceOf[AttrPair])
-
-      var i = 0
-      while (i < newChildrenFrags.length || i < oldChildrenFrags.length) {
-        updateElement(
-          parent.childNodes(oldNodeIdx),
-          newChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
-          oldChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
-          i
-        )
-        i += 1
-      }
-
-      // handle new attributes of current node
-      newAttrPairs.foreach { ap =>
-        ap.applyTo(parent.childNodes(oldNodeIdx).asInstanceOf[dom.Element])
-      }
-    }
-
-    def handleSeqFrags(newSF: SeqFrag[Frag], oldSF: SeqFrag[Frag]): Unit = {
-
-      val newNodeChildren = newSF.xs.map(x => newSF.ev(x)).filterNot(isEmptyStringFrag)
-      val oldNodeChildren = oldSF.xs.map(x => oldSF.ev(x)).filterNot(isEmptyStringFrag)
-
-      var i = 0
-      while (i < newNodeChildren.length || i < oldNodeChildren.length) {
-        updateElement(
-          parent, // parent is same here!
-          newNodeChildren.lift(i),
-          oldNodeChildren.lift(i),
-          oldNodeIdx + i
-        )
-        i += 1
-      }
-    }
+      oldNodeIdx: Int,
+      seqFrag: Boolean
+  ): Int = {
+    // println("updateElement",  oldNodeIdx, parent, "new", maybeNewFrag, "old", maybeOldFrag)
 
     (maybeNewFrag, maybeOldFrag) match {
       case (Some(newFrag), None) =>
-        val newElement = createElement(newFrag)
-        parent.appendChild(newElement)
+        val newElement = newFrag.render
+        // println(s"appending '${newElement.innerText}' at $oldNodeIdx to '${parent.innerText}'")
+        if (seqFrag) {
+          val referenceElement = parent.childNodes(oldNodeIdx)
+          parent.insertBefore(newElement, referenceElement)
+        } else {
+          parent.appendChild(newElement)
+        }
+      // println("appending done")
       case (None, _) =>
+        // println(s"removing $oldNodeIdx")
         val removeElement = parent.childNodes(oldNodeIdx)
         parent.removeChild(removeElement)
+      // println(s"removing done $oldNodeIdx")
+      case (Some(newSF: SeqFrag[_]), Some(oldSF: SeqFrag[_])) => return handleSeqFrags(
+          parent,
+          oldNodeIdx,
+          newSF.asInstanceOf[SeqFrag[Frag]],
+          oldSF.asInstanceOf[SeqFrag[Frag]]
+        )
+      case (Some(newSF: bindNode[_]), Some(oldSF: bindNode[_])) =>
+        newSF.applyTo(parent.asInstanceOf[dom.Element])
       case (Some(newFrag), Some(oldFrag)) =>
         if (didChange(newFrag, oldFrag)) {
+          // println(s"replaceChild $oldNodeIdx", newFrag, oldFrag)
           parent.replaceChild(
-            createElement(newFrag),
+            newFrag.render,
             parent.childNodes(oldNodeIdx)
           )
+          // println(s"replaceChild done $oldNodeIdx")
         } else { // if not changed, check children also
-          (newFrag, oldFrag) match {
-            case (newTag: HtmlTag, oldTag: HtmlTag)           => handleChildren(newTag, oldTag)
-            case (newSF: SeqFrag[Frag], oldSF: SeqFrag[Frag]) => handleSeqFrags(newSF, oldSF)
-            case _                                            =>
-          }
+          // only "real" tags are diffable..
+          handleHtmlTags(
+            parent,
+            oldNodeIdx,
+            newFrag.asInstanceOf[HtmlTag],
+            oldFrag.asInstanceOf[HtmlTag]
+          )
         }
     }
+    1
+  }
+
+  private def handleHtmlTags(
+      parent: Node,
+      oldNodeIdx: Int,
+      newTag: HtmlTag,
+      oldTag: HtmlTag
+  ): Unit = {
+    val oldNode = parent.childNodes(oldNodeIdx)
+    val newNodeChildren = newTag.modifiers.flatten
+    val oldNodeChildren = oldTag.modifiers.flatten
+    val (newAttrPairs, newChildrenFrags) = newNodeChildren.partition(_.isInstanceOf[AttrPair])
+    val (oldAttrPairs, oldChildrenFrags) = oldNodeChildren.partition(_.isInstanceOf[AttrPair])
+
+    // handle attributes of current node
+    val oldElem = oldNode.asInstanceOf[dom.Element]
+    oldAttrPairs.foreach { ap =>
+      oldElem.removeAttribute(ap.asInstanceOf[AttrPair].a.name)
+    }
+    newAttrPairs.foreach { ap =>
+      ap.applyTo(oldElem)
+    }
+
+    // handle children
+    var i = 0
+    while (i < newChildrenFrags.length || i < oldChildrenFrags.length) {
+      updateElement(
+        oldNode,
+        newChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
+        oldChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
+        i,
+        false
+      )
+      i += 1
+    }
+  }
+
+  def handleSeqFrags(
+      parent: Node,
+      oldNodeIdx: Int,
+      newSF: SeqFrag[Frag],
+      oldSF: SeqFrag[Frag]
+  ): Int = {
+
+    val newChildrenFrags = newSF.xs.map(x => newSF.ev(x)).filterNot(isEmptyStringFrag)
+    val oldChildrenFrags = oldSF.xs.map(x => oldSF.ev(x)).filterNot(isEmptyStringFrag)
+
+    var len = newChildrenFrags.length max oldChildrenFrags.length
+    var i = 0
+    while (i < len) {
+      val childCount = parent.childNodes.length
+      updateElement(
+        parent, // parent is same here!!
+        newChildrenFrags.lift(i),
+        oldChildrenFrags.lift(i),
+        i + oldNodeIdx,
+        true
+      )
+      val childCount2 = parent.childNodes.length
+      if (childCount2 < childCount) {
+        // when child deleted do not increment i
+        len -= 1
+      } else {
+        i += 1
+      }
+    }
+    newChildrenFrags.length
   }
 
   private def didChange(newFrag: Frag, oldFrag: Frag): Boolean =
     if (newFrag.getClass != oldFrag.getClass) true
-    else newFrag match {
-      case _: StringFrag => true
-      case _: RawFrag    => true
-      case _: SeqFrag[_] => false
-      case _ =>
-        val node1 = newFrag.asInstanceOf[HtmlTag]
-        val node2 = oldFrag.asInstanceOf[HtmlTag]
-        node1.tag != node2.tag
+    else (newFrag, oldFrag) match {
+      case (newFrag: HtmlTag, oldFrag: HtmlTag) => newFrag.tag != oldFrag.tag
+      case _                                    => true
     }
 
   private def isEmptyStringFrag(frag: Frag): Boolean =

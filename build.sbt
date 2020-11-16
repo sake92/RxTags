@@ -15,7 +15,7 @@ inThisBuild(
   )
 )
 
-val core = (project in file("core"))
+lazy val core = (project in file("core"))
   .settings(
     name := "rxtags",
     version := "0.0.1-SNAPSHOT",
@@ -27,9 +27,20 @@ val core = (project in file("core"))
   )
   .enablePlugins(ScalaJSPlugin)
 
-val examples = (project in file("examples"))
+lazy val examples = (project in file("examples"))
   .settings(
     scalaJSUseMainModuleInitializer := true
+  )
+  .dependsOn(core)
+  .enablePlugins(ScalaJSPlugin)
+
+lazy val todo = (project in file("todo"))
+  .settings(
+    scalaJSUseMainModuleInitializer := true,
+    libraryDependencies ++= Seq(
+      "com.lihaoyi"%%%"upickle"%"1.2.0",
+    "ba.sake"%%%"scalajs-router"%"0.0.5"
+    )
   )
   .dependsOn(core)
   .enablePlugins(ScalaJSPlugin)
