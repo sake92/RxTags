@@ -7,6 +7,12 @@ package object rxtags
     with RxAddons
     with ScalatagsAddons {
 
+  // TODO make RxTags Var-s,
+  // just delegate to reactify! :) no implicits bullshit
+
+  // Val (set, now), Var, Channel (fire)
+  // Var.map vraća Val !!
+
   type Var[T] = reactify.Var[T]
   type Val[T] = reactify.Val[T]
   type Channel[T] = reactify.Channel[T]

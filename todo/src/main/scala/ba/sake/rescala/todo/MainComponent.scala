@@ -6,12 +6,13 @@ import org.scalajs.dom.ext.KeyValue
 import org.scalajs.dom.html.Input
 import scalatags.JsDom.all._
 
-// <input>s are decoupled from its callbacks via Events
 class MainComponent(todoService: TodoService) {
-  private val todos$ = todoService.todos$
 
   val todoFilter$ : Var[TodoFilter] = Var(TodoFilter.All)
-  private val todosFiltered$ = todoService.todos$.map {
+
+  private val todos$ = todoService.todos$
+
+  private val todosFiltered$ = todos$.map {
     todos => todos.filter(todoFilter$.get.isValid)
   }
 

@@ -80,8 +80,8 @@ private[rxtags] trait RxFrags {
       }
 
       rxFrag.attachAndFire { frag =>
-        // println("*" * 50)
-        // println("Update", frag, nodeIdx)
+        println("*" * 50)
+        println("Update", frag, nodeIdx)
 
         nodeIdx = seqFragDatas(parent).filter(_._1 < fragId).values.map(_.totalNodes).sum
 

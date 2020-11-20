@@ -7,20 +7,27 @@ import scalatags.JsDom.all._
 
 object Ex3 {
 
-  val username$ = Var("")
+  val counter$ = Var(0)
+
+  dom.window.setInterval(
+    () => {
+      println("tick")
+      counter$.set(counter$.get + 1)
+    },
+    1000
+  )
 
   def content(): Frag =
     div(
-      "Please enter your username:",
-      input(onkeyup := updateUsername()),
-      username$.map { u =>
-        s"Username: $u"
+      h3("Reactive counter"),
+      counter$.map { c =>
+        s"Counter: $c"
       }.asFrag
     )
 
-  def updateUsername(): (dom.KeyboardEvent => Unit) =
-    e => {
-      val inputField = e.target.asInstanceOf[HTMLInputElement]
-      username$.set(inputField.value)
-    }
+  /* "ADVANCED":
+   `counter$.set(counter$.get + 1)`
+      could be written as
+   `counter$.transform(_ + 1)`
+   */
 }

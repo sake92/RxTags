@@ -16,7 +16,7 @@ object VDOM {
       oldNodeIdx: Int,
       seqFrag: Boolean
   ): Int = {
-    // println("updateElement",  oldNodeIdx, parent, "new", maybeNewFrag, "old", maybeOldFrag)
+    println("updateElement", oldNodeIdx, parent, "new", maybeNewFrag, "old", maybeOldFrag)
 
     (maybeNewFrag, maybeOldFrag) match {
       case (Some(newFrag), None) =>
@@ -109,6 +109,7 @@ object VDOM {
 
     val oldNode = parent.childNodes(oldNodeIdx)
     var i = 0
+    // TODO check if needed at all...
     // handle attributes of current node
     /*
     val oldElem = oldNode.asInstanceOf[dom.Element]

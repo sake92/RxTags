@@ -10,8 +10,6 @@ case class TodoComponent(
     todo: Todo
 ) {
 
-  println(todo)
-
   private val todo$ = Var(todo)
   private val isEdit$ = Var(false)
 
@@ -45,8 +43,6 @@ case class TodoComponent(
     val completedCls$ = Val { if (todo$.get.completed) "completed" else "" }
     val editingCls$ = Val { if (isEdit$.get) "editing" else "" }
 
-    println(todo$.get, isChecked$)
-
     li(cls := editingCls$, cls := completedCls$)(
       div(cls := "view")(
         input(
@@ -79,10 +75,9 @@ case class TodoComponent(
 
   private def stopEditing(): Unit = {
     isEdit$.set(false)
-    /*
     val newValue = editInput.value.trim
     if (newValue.nonEmpty) {
       todo$.transform(_.copy(name = newValue))
-    }*/
+    }
   }
 }
