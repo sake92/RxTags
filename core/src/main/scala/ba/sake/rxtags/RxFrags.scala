@@ -79,7 +79,7 @@ private[rxtags] trait RxFrags {
         seqFragDatas += parent -> newParentDatas
       }
 
-      rxFrag.attach { frag =>
+      rxFrag.attachAndFire { frag =>
         // println("*" * 50)
         // println("Update", frag, nodeIdx)
 
@@ -88,7 +88,7 @@ private[rxtags] trait RxFrags {
         // update DOM
         val idx = nodeIdx + staticElems
         val totalNodes =
-          if (seqFrag) VDOM.handleSeqFrags(
+          if (seqFrag) VDOM.updateElementsInSeqFrag(
             parent,
             idx,
             frag.asInstanceOf[SeqFrag[Frag]],

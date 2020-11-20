@@ -34,7 +34,7 @@ object VDOM {
         val removeElement = parent.childNodes(oldNodeIdx)
         parent.removeChild(removeElement)
       // println(s"removing done $oldNodeIdx")
-      case (Some(newSF: SeqFrag[_]), Some(oldSF: SeqFrag[_])) => return handleSeqFrags(
+      case (Some(newSF: SeqFrag[_]), Some(oldSF: SeqFrag[_])) => return updateElementsInSeqFrag(
           parent,
           oldNodeIdx,
           newSF.asInstanceOf[SeqFrag[Frag]],
@@ -52,7 +52,7 @@ object VDOM {
           // println(s"replaceChild done $oldNodeIdx")
         } else { // if not changed, check children also
           // only "real" tags are diffable..
-          handleHtmlTags(
+          handleHtmlTag(
             parent,
             oldNodeIdx,
             newFrag.asInstanceOf[HtmlTag],
@@ -63,42 +63,7 @@ object VDOM {
     1
   }
 
-  private def handleHtmlTags(
-      parent: Node,
-      oldNodeIdx: Int,
-      newTag: HtmlTag,
-      oldTag: HtmlTag
-  ): Unit = {
-    val oldNode = parent.childNodes(oldNodeIdx)
-    val newNodeChildren = newTag.modifiers.flatten
-    val oldNodeChildren = oldTag.modifiers.flatten
-    val (newAttrPairs, newChildrenFrags) = newNodeChildren.partition(_.isInstanceOf[AttrPair])
-    val (oldAttrPairs, oldChildrenFrags) = oldNodeChildren.partition(_.isInstanceOf[AttrPair])
-
-    // handle attributes of current node
-    val oldElem = oldNode.asInstanceOf[dom.Element]
-    oldAttrPairs.foreach { ap =>
-      oldElem.removeAttribute(ap.asInstanceOf[AttrPair].a.name)
-    }
-    newAttrPairs.foreach { ap =>
-      ap.applyTo(oldElem)
-    }
-
-    // handle children
-    var i = 0
-    while (i < newChildrenFrags.length || i < oldChildrenFrags.length) {
-      updateElement(
-        oldNode,
-        newChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
-        oldChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
-        i,
-        false
-      )
-      i += 1
-    }
-  }
-
-  def handleSeqFrags(
+  def updateElementsInSeqFrag(
       parent: Node,
       oldNodeIdx: Int,
       newSF: SeqFrag[Frag],
@@ -128,6 +93,50 @@ object VDOM {
       }
     }
     newChildrenFrags.length
+  }
+
+  private def handleHtmlTag(
+      parent: Node,
+      oldNodeIdx: Int,
+      newTag: HtmlTag,
+      oldTag: HtmlTag
+  ): Unit = {
+
+    val newNodeChildren = newTag.modifiers.flatten
+    val oldNodeChildren = oldTag.modifiers.flatten
+    val (newAttrPairMods, newChildrenFrags) = newNodeChildren.partition(_.isInstanceOf[AttrPair])
+    val (oldAttrPairsMods, oldChildrenFrags) = oldNodeChildren.partition(_.isInstanceOf[AttrPair])
+
+    val oldNode = parent.childNodes(oldNodeIdx)
+    var i = 0
+    // handle attributes of current node
+    /*
+    val oldElem = oldNode.asInstanceOf[dom.Element]
+    val newAttrPairs = newAttrPairMods.map(_.asInstanceOf[AttrPair])
+    val oldAttrPairs = oldAttrPairsMods.map(_.asInstanceOf[AttrPair])
+    var i = 0
+    while (i < oldAttrPairs.length || i < newAttrPairs.length) {
+      (oldAttrPairs.lift(i), newAttrPairs.lift(i)) match {
+        case (Some(oldAp), None) =>
+          println("removing ", oldAp.a.name)
+          oldElem.removeAttribute(oldAp.a.name)
+        case (_, Some(newAp)) => newAp.applyTo(oldElem)
+      }
+      i += 1
+    }*/
+
+    // handle children
+    i = 0
+    while (i < newChildrenFrags.length || i < oldChildrenFrags.length) {
+      updateElement(
+        oldNode,
+        newChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
+        oldChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
+        i,
+        false
+      )
+      i += 1
+    }
   }
 
   private def didChange(newFrag: Frag, oldFrag: Frag): Boolean =

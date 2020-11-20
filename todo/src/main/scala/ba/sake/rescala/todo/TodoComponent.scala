@@ -10,10 +10,10 @@ case class TodoComponent(
     todo: Todo
 ) {
 
-  // OVDJE MORAM UPDATE todo$ a ne kroz servis.. :D
+  println(todo)
 
   private val todo$ = Var(todo)
-  private val isEdit = Var(false)
+  private val isEdit$ = Var(false)
 
   todo$.attach { updated =>
     todoService.update(updated)
@@ -40,24 +40,20 @@ case class TodoComponent(
   ).render
 
   def render: Frag = {
-    val todoName$ = Val { span(todo$.name) }.asFrag
-    val isChecked = Val { Option.when(todo$.completed)("checked") }
-    val completedCls = Val { Option.when(todo$.completed)("completed") }
-    val editingCls = Val { Option.when(isEdit())("editing") }
-    val liClasses = Val {
-      //(completedCls.get ++ editingCls.get).mkString(" ")
-      completedCls.getOrElse("") + " " + editingCls.getOrElse("")
-    }
+    val todoName$ = Val { span(todo$.get.name) }.asFrag
+    val isChecked$ = Val { Option.when(todo$.get.completed)("checked") } // must use Option here !!!
+    val completedCls$ = Val { if (todo$.get.completed) "completed" else "" }
+    val editingCls$ = Val { if (isEdit$.get) "editing" else "" }
 
-    liClasses.attach(liiiii => println("li:" + liiiii))
+    println(todo$.get, isChecked$)
 
-    li(cls := liClasses)(
+    li(cls := editingCls$, cls := completedCls$)(
       div(cls := "view")(
         input(
           onchange := { () =>
             toggleCompletedChannel.set(())
           },
-          checked := isChecked,
+          checked := isChecked$,
           cls := "toggle",
           tpe := "checkbox"
         ),
@@ -76,16 +72,17 @@ case class TodoComponent(
   }
 
   private def startEditing(): Unit = {
-    isEdit.set(true)
+    isEdit$.set(true)
     editInput.focus()
     editInput.selectionStart = editInput.value.length
   }
 
   private def stopEditing(): Unit = {
-    isEdit.set(false)
+    isEdit$.set(false)
+    /*
     val newValue = editInput.value.trim
     if (newValue.nonEmpty) {
       todo$.transform(_.copy(name = newValue))
-    }
+    }*/
   }
 }

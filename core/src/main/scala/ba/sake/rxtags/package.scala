@@ -39,10 +39,10 @@ trait ScalatagsAddons {
       override def apply(t: Element, a: Attr, v: Option[T]): Unit = {
         v match {
           case Some(value) => ev.apply(t, a, value)
-          case None => a.namespace match {
-              case None     => t.removeAttribute(a.name)
-              case Some(ns) => t.removeAttributeNS(ns.uri, a.name)
-            }
+          case None =>
+            if (a.name == "class") ev.apply(t, a, "".asInstanceOf[T])
+            else t.removeAttribute(a.name)
+
         }
       }
     }
