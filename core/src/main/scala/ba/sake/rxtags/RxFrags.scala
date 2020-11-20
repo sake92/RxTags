@@ -95,6 +95,7 @@ private[rxtags] trait RxFrags {
             maybeOldFrag.get.asInstanceOf[SeqFrag[Frag]]
           )
           else VDOM.updateElement(parent, Option(frag), maybeOldFrag, idx, seqFrag)
+
         maybeOldFrag = Option(frag)
 
         // update count

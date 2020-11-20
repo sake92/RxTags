@@ -16,7 +16,7 @@ object VDOM {
       oldNodeIdx: Int,
       seqFrag: Boolean
   ): Int = {
-    println("updateElement", oldNodeIdx, parent, "new", maybeNewFrag, "old", maybeOldFrag)
+    // println("updateElement", oldNodeIdx, parent, "new", maybeNewFrag, "old", maybeOldFrag)
 
     (maybeNewFrag, maybeOldFrag) match {
       case (Some(newFrag), None) =>
@@ -109,34 +109,32 @@ object VDOM {
 
     val oldNode = parent.childNodes(oldNodeIdx)
     var i = 0
-    // TODO check if needed at all...
-    // handle attributes of current node
-    /*
-    val oldElem = oldNode.asInstanceOf[dom.Element]
-    val newAttrPairs = newAttrPairMods.map(_.asInstanceOf[AttrPair])
-    val oldAttrPairs = oldAttrPairsMods.map(_.asInstanceOf[AttrPair])
-    var i = 0
-    while (i < oldAttrPairs.length || i < newAttrPairs.length) {
-      (oldAttrPairs.lift(i), newAttrPairs.lift(i)) match {
-        case (Some(oldAp), None) =>
-          println("removing ", oldAp.a.name)
-          oldElem.removeAttribute(oldAp.a.name)
-        case (_, Some(newAp)) => newAp.applyTo(oldElem)
-      }
-      i += 1
-    }*/
+
+    // handle attributes
+    locally {
+      val oldElem = oldNode.asInstanceOf[dom.Element]
+      val newAttrPairs = newAttrPairMods.map(_.asInstanceOf[AttrPair])
+      val oldAttrPairs = oldAttrPairsMods.map(_.asInstanceOf[AttrPair])
+      println(newAttrPairs, oldAttrPairs)
+      oldAttrPairs.foreach(ap => {
+        oldElem.removeAttribute(ap.a.name)
+      })
+      newAttrPairs.foreach(ap => ap.applyTo(oldElem))
+    }
 
     // handle children
-    i = 0
-    while (i < newChildrenFrags.length || i < oldChildrenFrags.length) {
-      updateElement(
-        oldNode,
-        newChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
-        oldChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
-        i,
-        false
-      )
-      i += 1
+    locally {
+      i = 0
+      while (i < newChildrenFrags.length || i < oldChildrenFrags.length) {
+        updateElement(
+          oldNode,
+          newChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
+          oldChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
+          i,
+          false
+        )
+        i += 1
+      }
     }
   }
 

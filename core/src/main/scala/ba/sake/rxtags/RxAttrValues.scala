@@ -26,6 +26,8 @@ private[rxtags] trait RxAttrValues {
           implicitly[AttrValue[T]].apply(element, attr, newValue)
         }
 
+      // if we have 2 Rx classes, both these handle different class names,
+      // so we only add/remove classes for *that particular RX* !
       private def handleClass(newValue: T, element: Element): Unit = {
         val newValStr = newValue match {
           case opt: Option[Any] => opt.map(_.toString).getOrElse("")
@@ -35,7 +37,7 @@ private[rxtags] trait RxAttrValues {
         classes ++= newClasses
 
         // remove all classes handled by this RX,
-        // before maybe adding them again
+        // before maybe-adding them again
         classes.foreach { cn =>
           if (!newClasses.contains(cn)) {
             element.classList.remove(cn)

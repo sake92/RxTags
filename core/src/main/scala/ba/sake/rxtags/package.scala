@@ -12,6 +12,7 @@ package object rxtags
 
   // Val (set, now), Var, Channel (fire)
   // Var.map vraća Val !!
+  // Var.set i set(T => T)
 
   type Var[T] = reactify.Var[T]
   type Val[T] = reactify.Val[T]
@@ -36,19 +37,31 @@ trait RxAddons {
 }
 
 trait ScalatagsAddons {
-  import org.scalajs.dom.Element
+  import org.scalajs.dom
   import scalatags.JsDom.all.{Attr, AttrValue}
   import scalatags.generic
 
-  implicit def optionAttrValue[T](implicit ev: AttrValue[T]): generic.AttrValue[Element, Option[T]] =
+  // 1. it's not enough to add/remove "checked", we need to remove the propery also..
+  // 2. If it's a reactive class, we just delegate to its handler,
+  // in order to not break RxValue classes...
+  implicit def optionAttrValue[T](implicit ev: AttrValue[T]): generic.AttrValue[dom.Element, Option[T]] =
     new AttrValue[Option[T]] {
-      override def apply(t: Element, a: Attr, v: Option[T]): Unit = {
+      override def apply(t: dom.Element, a: Attr, v: Option[T]): Unit = {
         v match {
-          case Some(value) => ev.apply(t, a, value)
+          case Some(value) =>
+            ev.apply(t, a, value)
+            if (a.name == "checked") {
+              t.asInstanceOf[dom.raw.HTMLInputElement].checked = true
+            }
           case None =>
-            if (a.name == "class") ev.apply(t, a, "".asInstanceOf[T])
-            else t.removeAttribute(a.name)
-
+            if (a.name == "class") {
+              ev.apply(t, a, "".asInstanceOf[T])
+            } else {
+              t.removeAttribute(a.name)
+              if (a.name == "checked") {
+                t.asInstanceOf[dom.raw.HTMLInputElement].checked = false
+              }
+            }
         }
       }
     }
