@@ -74,7 +74,6 @@ case class TodoComponent(
   }
 
   private def stopEditing(): Unit = {
-    println("stop edit")
     isEdit$.set(false)
     val newValue = editInput.value.trim
     if (newValue.nonEmpty) {

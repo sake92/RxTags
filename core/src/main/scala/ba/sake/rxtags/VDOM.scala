@@ -21,19 +21,20 @@ object VDOM {
     (maybeNewFrag, maybeOldFrag) match {
       case (Some(newFrag), None) =>
         val newElement = newFrag.render
-        // println(s"appending '${newElement.innerText}' at $oldNodeIdx to '${parent.innerText}'")
+        //println(s"appending '${newElement.innerText}' at $oldNodeIdx to '${parent.innerText}'")
         if (seqFrag) {
           val referenceElement = parent.childNodes(oldNodeIdx)
           parent.insertBefore(newElement, referenceElement)
         } else {
           parent.appendChild(newElement)
         }
-      // println("appending done")
+      //parent.appendChild(newElement)
+      //println("appending done")
       case (None, _) =>
-        // println(s"removing $oldNodeIdx")
+        //println(s"removing $oldNodeIdx")
         val removeElement = parent.childNodes(oldNodeIdx)
         parent.removeChild(removeElement)
-      // println(s"removing done $oldNodeIdx")
+      //println(s"removing done $oldNodeIdx")
       case (Some(newSF: SeqFrag[_]), Some(oldSF: SeqFrag[_])) => return updateElementsInSeqFrag(
           parent,
           oldNodeIdx,
@@ -41,15 +42,20 @@ object VDOM {
           oldSF.asInstanceOf[SeqFrag[Frag]]
         )
       case (Some(newSF: bindNode[_]), Some(oldSF: bindNode[_])) =>
-        newSF.applyTo(parent.asInstanceOf[dom.Element])
+        // these are already rendered DOM Elements
+        // TODO maybe do something smarter here..?
+        parent.replaceChild(
+          newSF.render,
+          parent.childNodes(oldNodeIdx)
+        )
       case (Some(newFrag), Some(oldFrag)) =>
         if (didChange(newFrag, oldFrag)) {
-          // println(s"replaceChild $oldNodeIdx", newFrag, oldFrag)
+          //println(s"replaceChild $oldNodeIdx", newFrag, oldFrag, parent.childNodes(oldNodeIdx).textContent)
           parent.replaceChild(
             newFrag.render,
             parent.childNodes(oldNodeIdx)
           )
-          // println(s"replaceChild done $oldNodeIdx")
+          //println(s"replaceChild done $oldNodeIdx")
         } else { // if not changed, check children also
           // only "real" tags are diffable..
           handleHtmlTag(
@@ -115,10 +121,7 @@ object VDOM {
       val oldElem = oldNode.asInstanceOf[dom.Element]
       val newAttrPairs = newAttrPairMods.map(_.asInstanceOf[AttrPair])
       val oldAttrPairs = oldAttrPairsMods.map(_.asInstanceOf[AttrPair])
-      println(newAttrPairs, oldAttrPairs)
-      oldAttrPairs.foreach(ap => {
-        oldElem.removeAttribute(ap.a.name)
-      })
+      oldAttrPairs.foreach { ap => oldElem.removeAttribute(ap.a.name) }
       newAttrPairs.foreach(ap => ap.applyTo(oldElem))
     }
 

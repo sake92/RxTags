@@ -55,12 +55,9 @@ class MainComponent(todoService: TodoService) {
           label(`for` := "toggle-all", "Mark all as complete"),
           ul(cls := "todo-list")(
             todosFiltered$.map { tf =>
-              //println("rennnnnnnnn " + tf)
-              div(
-                tf.map { t =>
-                  TodoComponent(todoService, t).render
-                }
-              )
+              tf.map { t =>
+                TodoComponent(todoService, t).render
+              }
             }.asFrag
           )
         ),

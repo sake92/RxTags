@@ -29,19 +29,13 @@ private[rxtags] trait RxFrags {
   /* Seqs */
   implicit class ValSeqOps[CC <: Seq[Frag]](rxSeq: Val[CC]) {
     implicit val ev: Frag => Frag = identity
-    private val rxFrag = rxSeq.map { seq =>
-      val seqq = if (seq.isEmpty) Seq(div(hidden := true)) else seq
-      SeqFrag(seqq)
-    }
+    private val rxFrag = rxSeq.map(s => SeqFrag(s))
     def asFrag: Frag = new ReactifiedFrag(rxFrag, true)
   }
 
   implicit class VarSeqOps[CC <: Seq[Frag]](rxSeq: Var[CC]) {
     implicit val ev: Frag => Frag = identity
-    private val rxFrag = rxSeq.map { seq =>
-      val seqq = if (seq.isEmpty) Seq(div(hidden := true)) else seq
-      SeqFrag(seqq)
-    }
+    private val rxFrag = rxSeq.map(s => SeqFrag(s))
     def asFrag: Frag = new ReactifiedFrag(rxFrag, true)
   }
 
@@ -80,8 +74,8 @@ private[rxtags] trait RxFrags {
       }
 
       rxFrag.attachAndFire { frag =>
-        println("*" * 50)
-        println("Update", frag, nodeIdx)
+        // println("*" * 50)
+        // println("Update", frag, nodeIdx)
 
         nodeIdx = seqFragDatas(parent).filter(_._1 < fragId).values.map(_.totalNodes).sum
 
@@ -111,6 +105,10 @@ private[rxtags] trait RxFrags {
       val initialFrag = rxFrag.get
       maybeOldFrag = Option(initialFrag)
       initialFrag.render
+    }
+
+    override def toString: String = {
+      "RxFrag(" + maybeOldFrag.toString + ")"
     }
   }
 }
