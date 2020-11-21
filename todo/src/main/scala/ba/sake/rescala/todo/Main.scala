@@ -12,11 +12,10 @@ object Main {
     val rootComponent = new MainComponent(todoService)
     root.appendChild(rootComponent.render)
 
-    /*
     Router().withBaseUrl("/ReScala-todomvc").withListener {
-      case "/active"    => MainComponent.todoFilter.set(TodoFilter.Active)
-      case "/completed" => MainComponent.todoFilter.set(TodoFilter.Completed)
-      case _            => MainComponent.todoFilter.set(TodoFilter.All)
-    }.init()*/
+      case "/active"    => rootComponent.todoFilter$.set(TodoFilter.Active)
+      case "/completed" => rootComponent.todoFilter$.set(TodoFilter.Completed)
+      case _            => rootComponent.todoFilter$.set(TodoFilter.All)
+    }.init()
   }
 }
