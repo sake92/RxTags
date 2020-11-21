@@ -16,14 +16,14 @@ class MainComponent(todoService: TodoService) {
     todos => todos.filter(todoFilter$.now.isValid)
   }
 
-  private val addTodoEvent = Channel[KeyboardEvent]
-  addTodoEvent.attach(addTodo)
+  private val addTodoChannel = Channel[KeyboardEvent]
+  addTodoChannel.attach(addTodo)
 
   private val mainDisplay$ = todos$.map(todos => if (todos.isEmpty) "none" else "block")
 
   private val addInput = input(
     onkeyup := { (e: KeyboardEvent) =>
-      if (e.key == KeyValue.Enter) addTodoEvent.fire(e)
+      if (e.key == KeyValue.Enter) addTodoChannel.fire(e)
     },
     cls := "new-todo",
     placeholder := "What needs to be done?",
