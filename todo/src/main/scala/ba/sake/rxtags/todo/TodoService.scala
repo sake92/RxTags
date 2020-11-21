@@ -2,7 +2,6 @@ package ba.sake.rxtags.todo
 
 import java.util.UUID
 import org.scalajs.dom
-import upickle.default._
 import ba.sake.rxtags._
 
 class TodoService {
@@ -32,6 +31,7 @@ class TodoService {
   }
 
   private def initTodos() = {
+    import upickle.default._
     val savedTodosJson = dom.window.localStorage.getItem(TodosKey)
     val todos =
       if (savedTodosJson == null)
