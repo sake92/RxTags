@@ -13,7 +13,7 @@ class MainComponent(todoService: TodoService) {
   private val todos$ = todoService.todos$
 
   private val todosFiltered$ = todos$.map {
-    todos => todos.filter(todoFilter$.get.isValid)
+    todos => todos.filter(todoFilter$.now.isValid)
   }
 
   private val addTodoEvent = Channel[KeyboardEvent]
@@ -21,14 +21,14 @@ class MainComponent(todoService: TodoService) {
 
   private val addInput = input(
     onkeyup := { (e: KeyboardEvent) =>
-      if (e.key == KeyValue.Enter) addTodoEvent.set(e)
+      if (e.key == KeyValue.Enter) addTodoEvent.fire(e)
     },
     cls := "new-todo",
     placeholder := "What needs to be done?",
     autofocus
   ).render
 
-  private val mainDisplay = todos$.map(todos => if (todos.isEmpty) "none" else "block")
+  private val mainDisplay$ = todos$.map(todos => if (todos.isEmpty) "none" else "block")
 
   private val countFrag = todos$.map { todos =>
     val count = todos.count(!_.completed)
@@ -43,7 +43,7 @@ class MainComponent(todoService: TodoService) {
           h1("todos"),
           addInput
         ),
-        tag("section")(cls := "main", css("display") := mainDisplay)(
+        tag("section")(cls := "main", css("display") := mainDisplay$)(
           input(
             onclick := { () =>
               todoService.toggleAll()
@@ -61,7 +61,7 @@ class MainComponent(todoService: TodoService) {
             }.asFrag
           )
         ),
-        footer(cls := "footer", css("display") := mainDisplay)(
+        footer(cls := "footer", css("display") := mainDisplay$)(
           span(cls := "todo-count")(countFrag),
           ul(cls := "filters")(
             li(a(data.navigate := "/", "All", cls := maybeSelected(TodoFilter.All))),

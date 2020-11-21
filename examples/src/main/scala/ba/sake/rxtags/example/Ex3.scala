@@ -12,7 +12,7 @@ object Ex3 {
   dom.window.setInterval(
     () => {
       println("tick")
-      counter$.set(counter$.get + 1)
+      counter$.set(counter$.now + 1)
     },
     1000
   )
@@ -28,6 +28,6 @@ object Ex3 {
   /* "ADVANCED":
    `counter$.set(counter$.get + 1)`
       could be written as
-   `counter$.transform(_ + 1)`
+   `counter$.set(_ + 1)`
    */
 }

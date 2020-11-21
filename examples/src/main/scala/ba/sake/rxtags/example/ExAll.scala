@@ -42,7 +42,7 @@ object ExAll {
 
   def toggleClass(): (dom.MouseEvent => Unit) =
     e => {
-      className$.transform { cn =>
+      className$.set { cn =>
         if (cn.isDefined) None else Some("active")
       }
     }

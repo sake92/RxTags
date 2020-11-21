@@ -2,7 +2,6 @@ package ba.sake.rxtags
 
 import org.scalajs.dom.{Element, Node}
 import scalatags.JsDom.all._
-import reactify._
 
 private[rxtags] trait RxStyleValues {
 

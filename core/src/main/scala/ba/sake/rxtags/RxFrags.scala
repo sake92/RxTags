@@ -3,7 +3,6 @@ package ba.sake.rxtags
 import org.scalajs.dom.{Element, Node}
 import scalatags.JsDom.all._
 import scalatags.jsdom
-import reactify._
 
 private[rxtags] trait RxFrags {
 
@@ -62,7 +61,7 @@ private[rxtags] trait RxFrags {
         val parentDatas = seqFragDatas(parent)
         this.fragId = parentDatas.keys.maxOption.map(_ + 1).getOrElse(0)
         this.staticElems = nodeIdx - seqFragDatas(parent).values.map(_.totalNodes).sum
-        val totalNodes = rxFrag.get match {
+        val totalNodes = rxFrag.now match {
           case sf: SeqFrag[_] => sf.xs.length
           case _: StringFrag  => 1
           case _: RawFrag     => 1
@@ -102,7 +101,7 @@ private[rxtags] trait RxFrags {
     }
 
     override def render: Node = {
-      val initialFrag = rxFrag.get
+      val initialFrag = rxFrag.now
       maybeOldFrag = Option(initialFrag)
       initialFrag.render
     }

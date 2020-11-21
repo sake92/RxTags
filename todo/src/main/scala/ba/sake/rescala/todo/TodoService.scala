@@ -12,23 +12,23 @@ class TodoService {
 
   val todos$ : Var[List[Todo]] = initTodos()
 
-  def add(todo: Todo): Unit = todos$.transform(_.appended(todo))
+  def add(todo: Todo): Unit = todos$.set(_.appended(todo))
 
   def update(updated: Todo): Unit = {
-    todos$.transform { it =>
+    todos$.set { it =>
       //println("Update " + updated)
       it.map(t => if (t.id == updated.id) updated else t)
     }
   }
 
-  def remove(id: UUID): Unit = todos$.transform(_.filterNot(_.id == id))
+  def remove(id: UUID): Unit = todos$.set(_.filterNot(_.id == id))
 
-  def removeCompleted(): Unit = todos$.transform(_.filterNot(_.completed))
+  def removeCompleted(): Unit = todos$.set(_.filterNot(_.completed))
 
   def toggleAll(): Unit = {
-    toggleAllState.transform(s => !s)
-    todos$.transform(
-      _.map(_.copy(completed = toggleAllState.get))
+    toggleAllState.set(s => !s)
+    todos$.set(
+      _.map(_.copy(completed = toggleAllState.now))
     )
   }
 

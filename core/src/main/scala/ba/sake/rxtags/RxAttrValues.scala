@@ -1,10 +1,7 @@
 package ba.sake.rxtags
 
-import java.util.UUID
-
 import org.scalajs.dom.{Element, Node}
 import scalatags.JsDom.all.{Attr, AttrValue}
-import reactify._
 
 private[rxtags] trait RxAttrValues {
 
