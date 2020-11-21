@@ -1,4 +1,4 @@
-package ba.sake.rescala.todo
+package ba.sake.rxtags.todo
 
 trait TodoFilter {
   def isValid(todo: Todo): Boolean

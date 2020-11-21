@@ -1,9 +1,8 @@
 package ba.sake.rxtags.example
 
-import ba.sake.rxtags._
 import org.scalajs.dom
-import org.scalajs.dom.raw.HTMLInputElement
 import scalatags.JsDom.all._
+import ba.sake.rxtags._
 
 object Ex3 {
 
@@ -12,7 +11,7 @@ object Ex3 {
   dom.window.setInterval(
     () => {
       println("tick")
-      counter$.set(counter$.now + 1)
+      counter$.set(counter$.now + 1) // or counter$.set(_ + 1)
     },
     1000
   )
@@ -24,10 +23,4 @@ object Ex3 {
         s"Counter: $c"
       }.asFrag
     )
-
-  /* "ADVANCED":
-   `counter$.set(counter$.get + 1)`
-      could be written as
-   `counter$.set(_ + 1)`
-   */
 }

@@ -7,7 +7,7 @@ import scalatags.JsDom.all._
 /**
   * Adaptation from https://medium.com/@deathmood/how-to-write-your-own-virtual-dom-ee74acc13060
   */
-object VDOM {
+private[rxtags] object VDOM {
 
   def updateElement(
       parent: Node,

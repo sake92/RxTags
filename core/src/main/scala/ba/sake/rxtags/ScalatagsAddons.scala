@@ -4,7 +4,7 @@ import org.scalajs.dom
 import scalatags.JsDom.all.{Attr, AttrValue}
 import scalatags.generic
 
-trait ScalatagsAddons {
+private[rxtags] trait ScalatagsAddons {
 
   // 1. it's not enough to add/remove "checked", we need to remove the propery also..
   // 2. If it's a reactive class, we just delegate to its handler,

@@ -1,4 +1,4 @@
-package ba.sake.rescala.todo
+package ba.sake.rxtags.todo
 
 import ba.sake.rxtags._
 import org.scalajs.dom.KeyboardEvent

@@ -8,9 +8,8 @@ object Main {
 
     val root = dom.document.getElementById("root")
 
-    val content = ExListRemove.content().render
+    val content = Ex1.content().render
 
     root.appendChild(content)
   }
-
 }

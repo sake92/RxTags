@@ -16,12 +16,12 @@ trait Stateful[T] {
 
 // Val
 object Val {
-  def apply[T](f: => T): Val[T] = new Val(f)
+  def apply[T](initValue: => T): Val[T] = new Val(initValue)
 }
 
-class Val[T](f: => T) extends Reactive[T] with Stateful[T] {
+final class Val[T] private (initValue: => T) extends Reactive[T] with Stateful[T] {
 
-  private val rx = reactify.Val[T](f)
+  private val rx = reactify.Val[T](initValue)
 
   override def now: T = rx.get
 
@@ -34,12 +34,12 @@ class Val[T](f: => T) extends Reactive[T] with Stateful[T] {
 
 // Var
 object Var {
-  def apply[T](f: => T): Var[T] = new Var(f)
+  def apply[T](initValue: => T): Var[T] = new Var(initValue)
 }
 
-class Var[T](f: => T) extends Reactive[T] with Stateful[T] {
+final class Var[T] private (initValue: => T) extends Reactive[T] with Stateful[T] {
 
-  private val rx = reactify.Var[T](f)
+  private val rx = reactify.Var[T](initValue)
 
   override def now: T = rx.get
 
@@ -49,21 +49,21 @@ class Var[T](f: => T) extends Reactive[T] with Stateful[T] {
 
   def set(f: => T): Unit = rx.set(f)
 
-  def set(f: T => T): Unit = rx.set(f(rx.get))
+  def set(f: T => T): Unit = rx.set(f(now))
 
-  def map[R](f: T => R): Var[R] = Var(f(rx.get))
+  def map[R](f: T => R): Var[R] = Var(f(now))
 }
 
-// Var
+// Channel
 object Channel {
-  def apply[T]: Channel[T] = new Channel
+  def apply[T]: Channel[T] = new Channel()
 }
 
-class Channel[T] extends Reactive[T] {
+final class Channel[T] private () extends Reactive[T] {
 
   private val rx = reactify.Channel[T]
 
-  def fire(f: => T): Unit = rx.set(f)
+  override def attach(f: T => Unit): Unit = rx.attach(f)
 
-  def attach(f: T => Unit): Unit = rx.attach(f)
+  def fire(f: => T): Unit = rx.set(f)
 }

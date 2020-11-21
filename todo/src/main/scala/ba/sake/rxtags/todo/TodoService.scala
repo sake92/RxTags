@@ -1,4 +1,4 @@
-package ba.sake.rescala.todo
+package ba.sake.rxtags.todo
 
 import java.util.UUID
 import org.scalajs.dom
@@ -16,7 +16,6 @@ class TodoService {
 
   def update(updated: Todo): Unit = {
     todos$.set { it =>
-      //println("Update " + updated)
       it.map(t => if (t.id == updated.id) updated else t)
     }
   }

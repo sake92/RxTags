@@ -7,35 +7,35 @@ import scalatags.jsdom
 private[rxtags] trait RxFrags {
 
   implicit class ValFragOps[T <: Frag](rxFrag: Val[T]) {
-    def asFrag: Frag = new ReactifiedFrag(rxFrag)
+    def asFrag: Frag = new RxFrag(rxFrag)
   }
 
   implicit class VarFragOps[T <: Frag](rxFrag: Var[T]) {
-    def asFrag: Frag = new ReactifiedFrag(rxFrag)
+    def asFrag: Frag = new RxFrag(rxFrag)
   }
 
   /* Strings */
   implicit class ValStringOps[T](rxString: Val[String]) {
     private val rxFrag = rxString.map(StringFrag)
-    def asFrag: Frag = new ReactifiedFrag(rxFrag)
+    def asFrag: Frag = new RxFrag(rxFrag)
   }
 
   implicit class VarStringOps[T](rxString: Var[String]) {
     private val rxFrag = rxString.map(StringFrag)
-    def asFrag: Frag = new ReactifiedFrag(rxFrag)
+    def asFrag: Frag = new RxFrag(rxFrag)
   }
 
   /* Seqs */
   implicit class ValSeqOps[CC <: Seq[Frag]](rxSeq: Val[CC]) {
     implicit val ev: Frag => Frag = identity
     private val rxFrag = rxSeq.map(s => SeqFrag(s))
-    def asFrag: Frag = new ReactifiedFrag(rxFrag, true)
+    def asFrag: Frag = new RxFrag(rxFrag, true)
   }
 
   implicit class VarSeqOps[CC <: Seq[Frag]](rxSeq: Var[CC]) {
     implicit val ev: Frag => Frag = identity
     private val rxFrag = rxSeq.map(s => SeqFrag(s))
-    def asFrag: Frag = new ReactifiedFrag(rxFrag, true)
+    def asFrag: Frag = new RxFrag(rxFrag, true)
   }
 
   /* SeqFrags are pretty complicated, so we track their elements counts dynamically */
@@ -44,13 +44,12 @@ private[rxtags] trait RxFrags {
   // parent -> (fragId -> seqFragData)
   private var seqFragDatas = Map.empty[Element, Map[Int, FragData]].withDefaultValue(Map.empty)
 
-  class ReactifiedFrag[T <: Frag](rxFrag: Stateful[T], seqFrag: Boolean = false) extends jsdom.Frag {
+  class RxFrag[T <: Frag](rxFrag: Stateful[T], seqFrag: Boolean = false) extends jsdom.Frag {
     private var maybeOldFrag: Option[Frag] = None
-    var parent: Element = _
-    var fragId: Int = _
-    var staticElems: Int = _
-
-    var nodeIdx: Int = 0
+    private var parent: Element = _
+    private var fragId: Int = _
+    private var staticElems: Int = _
+    private var nodeIdx: Int = 0
 
     override def applyTo(parent: Element): Unit = {
       nodeIdx = parent.childNodes.length
