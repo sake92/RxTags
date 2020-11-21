@@ -8,11 +8,11 @@ import ba.sake.rxtags._
 class TodoService {
   private val TodosKey = "TODOS"
 
-  private val toggleAllState = Var(false)
+  private val toggleAllState$ = Var(false)
 
   val todos$ : Var[List[Todo]] = initTodos()
 
-  def add(todo: Todo): Unit = todos$.set(_.appended(todo))
+  def add(todo: Todo): Unit = todos$.set(it => it.appended(todo))
 
   def update(updated: Todo): Unit = {
     todos$.set { it =>
@@ -20,15 +20,15 @@ class TodoService {
     }
   }
 
-  def remove(id: UUID): Unit = todos$.set(_.filterNot(_.id == id))
+  def remove(id: UUID): Unit = todos$.set(it => it.filterNot(_.id == id))
 
-  def removeCompleted(): Unit = todos$.set(_.filterNot(_.completed))
+  def removeCompleted(): Unit = todos$.set(it => it.filterNot(_.completed))
 
   def toggleAll(): Unit = {
-    toggleAllState.set(s => !s)
-    todos$.set(
-      _.map(_.copy(completed = toggleAllState.now))
-    )
+    toggleAllState$.set(s => !s)
+    todos$.set {
+      it => it.map(_.copy(completed = toggleAllState$.now))
+    }
   }
 
   private def initTodos() = {

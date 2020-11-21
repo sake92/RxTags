@@ -8,7 +8,7 @@ import scalatags.JsDom.all._
 
 class MainComponent(todoService: TodoService) {
 
-  val todoFilter$ : Var[TodoFilter] = Var(TodoFilter.All)
+  val todoFilter$ = Var(TodoFilter.All)
 
   private val todos$ = todoService.todos$
 
@@ -19,6 +19,8 @@ class MainComponent(todoService: TodoService) {
   private val addTodoEvent = Channel[KeyboardEvent]
   addTodoEvent.attach(addTodo)
 
+  private val mainDisplay$ = todos$.map(todos => if (todos.isEmpty) "none" else "block")
+
   private val addInput = input(
     onkeyup := { (e: KeyboardEvent) =>
       if (e.key == KeyValue.Enter) addTodoEvent.fire(e)
@@ -27,8 +29,6 @@ class MainComponent(todoService: TodoService) {
     placeholder := "What needs to be done?",
     autofocus
   ).render
-
-  private val mainDisplay$ = todos$.map(todos => if (todos.isEmpty) "none" else "block")
 
   private val countFrag = todos$.map { todos =>
     val count = todos.count(!_.completed)
@@ -64,9 +64,9 @@ class MainComponent(todoService: TodoService) {
         footer(cls := "footer", css("display") := mainDisplay$)(
           span(cls := "todo-count")(countFrag),
           ul(cls := "filters")(
-            li(a(data.navigate := "/", "All", cls := maybeSelected(TodoFilter.All))),
-            li(a(data.navigate := "/active", "Active", cls := maybeSelected(TodoFilter.Active))),
-            li(a(data.navigate := "/completed", "Completed", cls := maybeSelected(TodoFilter.Completed)))
+            li(a(data.navigate := "/", cls := selectedCls(TodoFilter.All))("All")),
+            li(a(data.navigate := "/active", cls := selectedCls(TodoFilter.Active))("Active")),
+            li(a(data.navigate := "/completed", cls := selectedCls(TodoFilter.Completed))("Completed"))
           ),
           button(
             onclick := { () =>
@@ -93,7 +93,7 @@ class MainComponent(todoService: TodoService) {
     }
   }
 
-  private def maybeSelected(filter: TodoFilter) =
+  private def selectedCls(filter: TodoFilter) =
     todoFilter$.map { tf =>
       Option.when(tf == filter)("selected")
     }
