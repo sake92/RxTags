@@ -1,8 +1,8 @@
 package ba.sake.rxtags.example
 
-import ba.sake.rxtags._
 import org.scalajs.dom
 import scalatags.JsDom.all._
+import ba.sake.rxtags._
 
 object Ex5 {
 
@@ -11,7 +11,7 @@ object Ex5 {
   dom.window.setInterval(
     () => {
       println("tick")
-      ticker$.set(ticker$.now + 1) // or counter$.set(_ + 1)
+      ticker$.set(_ + 1)
     },
     1000
   )

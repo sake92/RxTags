@@ -114,23 +114,42 @@ private[rxtags] object VDOM {
       oldTag: HtmlTag
   ): Unit = {
 
-    def isAP(m: Modifier) = m.isInstanceOf[AttrPair] || m.isInstanceOf[SeqNode[_]]
-
     //println("handleHtmlTag", parent, oldNodeIdx, newTag, oldTag)
 
-    val newNodeChildren = newTag.modifiers.flatten
-    val oldNodeChildren = oldTag.modifiers.flatten
-    val (newAttrPairMods, newChildrenFrags) = newNodeChildren.partition(isAP)
-    val (oldAttrPairsMods, oldChildrenFrags) = oldNodeChildren.partition(isAP)
+    val (newAttrPairMods, newChildrenFrags) = newTag.modifiers.flatten.flatMap {
+      case sn: SeqNode[_] => sn.xs.map(x => sn.ev(x))
+      case other          => Seq(other)
+    }.partition(_.isInstanceOf[AttrPair])
+
+    val (oldAttrPairsMods, oldChildrenFrags) = oldTag.modifiers.flatten.flatMap {
+      case sn: SeqNode[_] => sn.xs.map(x => sn.ev(x))
+      case other          => Seq(other)
+    }.partition(_.isInstanceOf[AttrPair])
 
     val oldNode = parent.childNodes(oldNodeIdx)
     var i = 0
 
     // handle attributes
+    // not all attributes are reflected to properties, so we special-case them..
+    // https://stackoverflow.com/a/45474861/4496364
     locally {
       val oldElem = oldNode.asInstanceOf[dom.Element]
-      oldAttrPairsMods.collect { case ap: AttrPair => oldElem.removeAttribute(ap.a.name) }
-      newAttrPairMods.foreach(ap => ap.applyTo(oldElem))
+      oldAttrPairsMods.map(_.asInstanceOf[AttrPair]).foreach { ap =>
+        oldElem.removeAttribute(ap.a.name)
+        ap.a.name match {
+          case "value"   => oldElem.asInstanceOf[dom.html.Input].value = ""
+          case "checked" => oldElem.asInstanceOf[dom.html.Input].checked = false
+          case _         => // noop
+        }
+      }
+      newAttrPairMods.map(_.asInstanceOf[AttrPair]).foreach { ap =>
+        ap.applyTo(oldElem)
+        ap.a.name match {
+          case "value"   => oldElem.asInstanceOf[dom.html.Input].value = ap.v.toString
+          case "checked" => oldElem.asInstanceOf[dom.html.Input].checked = ap.v.toString.toBoolean
+          case _         => // noop
+        }
+      }
     }
     //println("handleHtmlTag done attrs", parent, oldNodeIdx, newTag, oldTag)
 

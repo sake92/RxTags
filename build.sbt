@@ -20,7 +20,7 @@ lazy val core = (project in file("core"))
     name := "rxtags",
     skip in publish := false,
     libraryDependencies ++= Seq(
-      "ba.sake" %%% "scalatags" % "0.9.2-rx",
+      "ba.sake" %%% "scalatags" % "0.9.2-rx2",
       "com.outr" %%% "reactify" % "4.0.2"
     )
   )

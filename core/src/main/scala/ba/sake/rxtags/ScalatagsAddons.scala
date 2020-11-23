@@ -6,7 +6,8 @@ import scalatags.generic
 
 private[rxtags] trait ScalatagsAddons {
 
-  // 1. it's not enough to add/remove "checked", we need to remove the propery also..
+  // 1. Not all attributes are reflected to properties, so we special-case them..
+  //    https://stackoverflow.com/a/45474861/4496364
   // 2. If it's a reactive class, we just delegate to its handler,
   // in order to not break RxValue classes...
   implicit def optionAttrValue[T](implicit ev: AttrValue[T]): generic.AttrValue[dom.Element, Option[T]] =
@@ -15,16 +16,20 @@ private[rxtags] trait ScalatagsAddons {
         v match {
           case Some(value) =>
             ev.apply(t, a, value)
-            if (a.name == "checked") {
-              t.asInstanceOf[dom.raw.HTMLInputElement].checked = true
+            a.name match {
+              case "value"   => t.asInstanceOf[dom.html.Input].value = value.toString
+              case "checked" => t.asInstanceOf[dom.html.Input].checked = true
+              case _         => // noop
             }
           case None =>
             if (a.name == "class") {
               ev.apply(t, a, "".asInstanceOf[T])
             } else {
               t.removeAttribute(a.name)
-              if (a.name == "checked") {
-                t.asInstanceOf[dom.raw.HTMLInputElement].checked = false
+              a.name match {
+                case "value"   => t.asInstanceOf[dom.html.Input].value = ""
+                case "checked" => t.asInstanceOf[dom.html.Input].checked = false
+                case _         => // noop
               }
             }
         }
