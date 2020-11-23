@@ -14,7 +14,7 @@ object Ex2 {
 
   def content(): Frag =
     div(
-      h1("My awesome blog"),
+      h1("Example 2"),
       hr,
       blogPosts.map { post =>
         div(

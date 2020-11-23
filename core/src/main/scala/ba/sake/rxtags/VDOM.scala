@@ -16,7 +16,7 @@ private[rxtags] object VDOM {
       oldNodeIdx: Int,
       seqFrag: Boolean
   ): Int = {
-    // println("updateElement", oldNodeIdx, parent, "new", maybeNewFrag, "old", maybeOldFrag)
+    //println("updateElement", oldNodeIdx, parent, "new", maybeNewFrag, "old", maybeOldFrag)
 
     (maybeNewFrag, maybeOldFrag) match {
       case (Some(newFrag), None) =>
@@ -28,7 +28,6 @@ private[rxtags] object VDOM {
         } else {
           parent.appendChild(newElement)
         }
-      //parent.appendChild(newElement)
       //println("appending done")
       case (None, _) =>
         //println(s"removing $oldNodeIdx")
@@ -44,18 +43,20 @@ private[rxtags] object VDOM {
       case (Some(newSF: bindNode[_]), Some(oldSF: bindNode[_])) =>
         // these are already rendered DOM Elements
         // TODO maybe do something smarter here..?
+        //println("Handling bindNode", newSF)
         parent.replaceChild(
           newSF.render,
           parent.childNodes(oldNodeIdx)
         )
+      //println("Done handling bindNode", newSF)
       case (Some(newFrag), Some(oldFrag)) =>
         if (didChange(newFrag, oldFrag)) {
-          //println(s"replaceChild $oldNodeIdx", newFrag, oldFrag, parent.childNodes(oldNodeIdx).textContent)
+          //println(s"replaceChild $oldNodeIdx", newFrag, oldFrag)
           parent.replaceChild(
             newFrag.render,
             parent.childNodes(oldNodeIdx)
           )
-          //println(s"replaceChild done $oldNodeIdx")
+          //println(s"DONE replaceChild $oldNodeIdx", newFrag, oldFrag)
         } else { // if not changed, check children also
           // only "real" tags are diffable..
           handleHtmlTag(
@@ -66,6 +67,7 @@ private[rxtags] object VDOM {
           )
         }
     }
+    //println("DONE updateElement", oldNodeIdx, parent, "new", maybeNewFrag, "old", maybeOldFrag)
     1
   }
 
@@ -79,10 +81,13 @@ private[rxtags] object VDOM {
     val newChildrenFrags = newSF.xs.map(x => newSF.ev(x)).filterNot(isEmptyStringFrag)
     val oldChildrenFrags = oldSF.xs.map(x => oldSF.ev(x)).filterNot(isEmptyStringFrag)
 
+    //println("[SeqFrag] newChildrenFrags", newChildrenFrags)
+
     var len = newChildrenFrags.length max oldChildrenFrags.length
     var i = 0
     while (i < len) {
-      val childCount = parent.childNodes.length
+      val childCountBefore = parent.childNodes.length
+      //println("[SeqFrag] Before", i)
       updateElement(
         parent, // parent is same here!!
         newChildrenFrags.lift(i),
@@ -90,8 +95,9 @@ private[rxtags] object VDOM {
         i + oldNodeIdx,
         true
       )
-      val childCount2 = parent.childNodes.length
-      if (childCount2 < childCount) {
+      //println("[SeqFrag] After", i)
+      val childCountAfter = parent.childNodes.length
+      if (childCountAfter < childCountBefore) {
         // when child deleted do not increment i
         len -= 1
       } else {
@@ -108,10 +114,14 @@ private[rxtags] object VDOM {
       oldTag: HtmlTag
   ): Unit = {
 
+    def isAP(m: Modifier) = m.isInstanceOf[AttrPair] || m.isInstanceOf[SeqNode[_]]
+
+    //println("handleHtmlTag", parent, oldNodeIdx, newTag, oldTag)
+
     val newNodeChildren = newTag.modifiers.flatten
     val oldNodeChildren = oldTag.modifiers.flatten
-    val (newAttrPairMods, newChildrenFrags) = newNodeChildren.partition(_.isInstanceOf[AttrPair])
-    val (oldAttrPairsMods, oldChildrenFrags) = oldNodeChildren.partition(_.isInstanceOf[AttrPair])
+    val (newAttrPairMods, newChildrenFrags) = newNodeChildren.partition(isAP)
+    val (oldAttrPairsMods, oldChildrenFrags) = oldNodeChildren.partition(isAP)
 
     val oldNode = parent.childNodes(oldNodeIdx)
     var i = 0
@@ -119,16 +129,17 @@ private[rxtags] object VDOM {
     // handle attributes
     locally {
       val oldElem = oldNode.asInstanceOf[dom.Element]
-      val newAttrPairs = newAttrPairMods.map(_.asInstanceOf[AttrPair])
-      val oldAttrPairs = oldAttrPairsMods.map(_.asInstanceOf[AttrPair])
-      oldAttrPairs.foreach { ap => oldElem.removeAttribute(ap.a.name) }
-      newAttrPairs.foreach(ap => ap.applyTo(oldElem))
+      oldAttrPairsMods.collect { case ap: AttrPair => oldElem.removeAttribute(ap.a.name) }
+      newAttrPairMods.foreach(ap => ap.applyTo(oldElem))
     }
+    //println("handleHtmlTag done attrs", parent, oldNodeIdx, newTag, oldTag)
 
     // handle children
     locally {
+      //println("newChildrenFrags", newChildrenFrags, oldChildrenFrags)
       i = 0
       while (i < newChildrenFrags.length || i < oldChildrenFrags.length) {
+        //println("Handling child ", i)
         updateElement(
           oldNode,
           newChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
@@ -136,9 +147,11 @@ private[rxtags] object VDOM {
           i,
           false
         )
+        //println("DONE handling child ", i)
         i += 1
       }
     }
+    //println("DONE handleHtmlTag", parent, oldNodeIdx, newTag, oldTag)
   }
 
   private def didChange(newFrag: Frag, oldFrag: Frag): Boolean =

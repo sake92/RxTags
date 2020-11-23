@@ -8,6 +8,7 @@ object Ex1 {
 
   def content(): Frag =
     div(
+      h1("Example 1"),
       h3(cls := "active")(
         "This is an example"
       ),

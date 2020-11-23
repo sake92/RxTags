@@ -1,6 +1,6 @@
 package ba.sake.rxtags
 
-import org.scalajs.dom.{Element, Node}
+import org.scalajs.dom
 import scalatags.JsDom.all._
 import scalatags.jsdom
 
@@ -42,16 +42,16 @@ private[rxtags] trait RxFrags {
   case class FragData(nodeIdx: Int, totalNodes: Int)
 
   // parent -> (fragId -> seqFragData)
-  private var seqFragDatas = Map.empty[Element, Map[Int, FragData]].withDefaultValue(Map.empty)
+  private var seqFragDatas = Map.empty[dom.Element, Map[Int, FragData]].withDefaultValue(Map.empty)
 
   class RxFrag[T <: Frag](rxFrag: Stateful[T], seqFrag: Boolean = false) extends jsdom.Frag {
     private var maybeOldFrag: Option[Frag] = None
-    private var parent: Element = _
+    private var parent: dom.Element = _
     private var fragId: Int = _
     private var staticElems: Int = _
     private var nodeIdx: Int = 0
 
-    override def applyTo(parent: Element): Unit = {
+    override def applyTo(parent: dom.Element): Unit = {
       nodeIdx = parent.childNodes.length
       val firstRender = this.render
       parent.appendChild(firstRender)
@@ -99,7 +99,7 @@ private[rxtags] trait RxFrags {
       }
     }
 
-    override def render: Node = {
+    override def render: dom.Node = {
       val initialFrag = rxFrag.now
       maybeOldFrag = Option(initialFrag)
       initialFrag.render
