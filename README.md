@@ -6,7 +6,9 @@ Just reactive Scalatags with a simple API.
 You can use this [starter template](https://github.com/sake92/RxTags-Starter) to start exploring.
 
 Please report any errors you find!  
-It's still at very early stage. :)  
+https://gitter.im/sake92/RxTags
+
+It's still at early stage. :)  
 Feedback welcome!
 
 TODO:
