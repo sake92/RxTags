@@ -18,7 +18,7 @@ object Ex5 {
 
   def content(): Frag =
     div(
-      h1("Example 5"),
+      h2("Example 5"),
       ticker$.map { c =>
         s"Ticker: $c"
       }.asFrag

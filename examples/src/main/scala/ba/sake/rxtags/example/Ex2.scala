@@ -8,17 +8,15 @@ object Ex2 {
 
   val blogPosts = List(
     BlogPost("Hello ScalaJS", "Lorem Ipsum ScalaJS.........."),
-    BlogPost("Functional programming", "Lorem Ipsum FP.........."),
-    BlogPost("Blockhain stuff", "Lorem Ipsum Blockhain..........")
+    BlogPost("Functional programming", "Lorem Ipsum FP..........")
   )
 
   def content(): Frag =
     div(
-      h1("Example 2"),
-      hr,
+      h2("Example 2"),
       blogPosts.map { post =>
         div(
-          h3(post.title),
+          h4(post.title),
           post.content
         )
       }

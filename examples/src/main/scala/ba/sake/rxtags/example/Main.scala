@@ -12,18 +12,13 @@ object Main {
     val content = div(
       Ex1.content().render,
       hr,
-      hr,
       Ex2.content().render,
-      hr,
       hr,
       Ex3.content().render,
       hr,
-      hr,
       Ex4.content().render,
       hr,
-      hr,
       Ex5.content().render,
-      hr,
       hr
     ).render
 

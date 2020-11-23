@@ -9,11 +9,11 @@ object Ex3 {
 
   def content(): Frag =
     div(
-      h1("Example 3"),
-      counter$.map(c => h3(s"Reactive counter: $c")).asFrag,
+      h2("Example 3"),
+      counter$.map(c => h4(s"Reactive counter: $c")).asFrag,
       hr,
-      button(onclick := add(-1))("-"),
-      button(onclick := add(1))("+")
+      button(onclick := add(-1), cls := "btn b-warning")("-"),
+      button(onclick := add(1), cls := "btn b-accent")("+")
     )
 
   def add(incr: Int) =

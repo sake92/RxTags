@@ -8,11 +8,9 @@ object Ex1 {
 
   def content(): Frag =
     div(
-      h1("Example 1"),
-      h3(cls := "active")(
-        "This is an example"
-      ),
-      footer(style := "color:red;")(
+      h2("Example 1"),
+      h4("Header example"),
+      footer(cls := "bg-warning")(
         s"Hello, visitor number $number"
       )
     )

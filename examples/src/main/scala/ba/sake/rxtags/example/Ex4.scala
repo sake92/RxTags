@@ -10,7 +10,7 @@ object Ex4 {
 
   def content(): Frag =
     div(
-      h1("Example 4"),
+      h2("Example 4"),
       "Please enter your username: ",
       input(onkeyup := updateUsername()),
       br,
