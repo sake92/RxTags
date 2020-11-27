@@ -10,8 +10,8 @@ object Ex4 extends Example {
 
   def content = div(
     counter$.map(c => h4(s"Reactive counter: $c")).asFrag,
-    button(onclick := add(-1), cls := "btn")("-"),
-    button(onclick := add(1), cls := "btn")("+")
+    button(onclick := add(-1))("-"),
+    button(onclick := add(1))("+")
   )
 
   def add(incr: Int) =
