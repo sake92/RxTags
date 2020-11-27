@@ -18,19 +18,17 @@ object Ex6 extends Example {
     )
   )
 
-  def content = div(
-    cartItems$.map { items =>
-      ul(
-        items.map { item =>
-          li(
-            b(item.count),
-            s" ${item.name} ",
-            button(onclick := delete(item))("Delete")
-          )
-        }
-      )
-    }.asFrag
-  )
+  def content = cartItems$.map { items =>
+    ul(
+      items.map { item =>
+        li(
+          b(item.count),
+          s" ${item.name} ",
+          button(onclick := delete(item))("Delete")
+        )
+      }
+    )
+  }.asFrag
 
   def delete(item: CartItem): (dom.Event => Unit) =
     e => {

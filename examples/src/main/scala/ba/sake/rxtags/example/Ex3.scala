@@ -11,13 +11,13 @@ object Ex3 extends Example {
 
   def content = div(
     "Please enter your username: ",
-    input(onkeydown := updateUsername()),
+    input(onkeydown := updateUsername),
     username$.map { u =>
       s"Username: $u"
     }.asFrag
   )
 
-  def updateUsername(): (dom.KeyboardEvent => Unit) =
+  def updateUsername: (dom.KeyboardEvent => Unit) =
     e => {
       val inputField = e.target.asInstanceOf[dom.html.Input]
       username$.set(inputField.value)

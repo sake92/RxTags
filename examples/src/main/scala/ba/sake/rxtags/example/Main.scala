@@ -19,7 +19,7 @@ object Main {
       examples.zipWithIndex.map { case (ex, i) =>
         div(
           h2(s"Example ${i + 1}"),
-          ex.content.render,
+          ex.content,
           hr
         )
       }
