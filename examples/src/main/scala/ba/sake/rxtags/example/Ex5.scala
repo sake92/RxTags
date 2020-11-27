@@ -4,7 +4,8 @@ import org.scalajs.dom
 import scalatags.JsDom.all._
 import ba.sake.rxtags._
 
-object Ex5 {
+// RxTags variable
+object Ex5 extends Example {
 
   val ticker$ = Var(0)
 
@@ -16,11 +17,9 @@ object Ex5 {
     1000
   )
 
-  def content(): Frag =
-    div(
-      h2("Example 5"),
-      ticker$.map { c =>
-        s"Ticker: $c"
-      }.asFrag
-    )
+  def content = div(
+    ticker$.map { c =>
+      s"Ticker: $c"
+    }.asFrag
+  )
 }

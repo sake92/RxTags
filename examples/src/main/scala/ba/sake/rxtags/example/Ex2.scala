@@ -2,7 +2,8 @@ package ba.sake.rxtags.example
 
 import scalatags.JsDom.all._
 
-object Ex2 {
+// scalatags list
+object Ex2 extends Example {
 
   case class BlogPost(title: String, content: String)
 
@@ -11,14 +12,12 @@ object Ex2 {
     BlogPost("Functional programming", "Lorem Ipsum FP..........")
   )
 
-  def content(): Frag =
-    div(
-      h2("Example 2"),
-      blogPosts.map { post =>
-        div(
-          h4(post.title),
-          post.content
-        )
-      }
-    )
+  def content = div(
+    blogPosts.map { post =>
+      div(
+        h4(post.title),
+        post.content
+      )
+    }
+  )
 }

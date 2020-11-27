@@ -1,23 +1,25 @@
 package ba.sake.rxtags.example
 
+import org.scalajs.dom
 import scalatags.JsDom.all._
 import ba.sake.rxtags._
 
-object Ex3 {
+// RxTags variable
+object Ex3 extends Example {
 
-  val counter$ = Var(0)
+  val username$ = Var("")
 
-  def content(): Frag =
-    div(
-      h2("Example 3"),
-      counter$.map(c => h4(s"Reactive counter: $c")).asFrag,
-      hr,
-      button(onclick := add(-1), cls := "btn b-warning")("-"),
-      button(onclick := add(1), cls := "btn b-accent")("+")
-    )
+  def content = div(
+    "Please enter your username: ",
+    input(onkeydown := updateUsername()),
+    username$.map { u =>
+      s"Username: $u"
+    }.asFrag
+  )
 
-  def add(incr: Int) =
-    () => {
-      counter$.set(c => c + incr)
+  def updateUsername(): (dom.KeyboardEvent => Unit) =
+    e => {
+      val inputField = e.target.asInstanceOf[dom.html.Input]
+      username$.set(inputField.value)
     }
 }

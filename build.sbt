@@ -26,6 +26,22 @@ lazy val core = (project in file("core"))
   )
   .enablePlugins(ScalaJSPlugin)
 
+lazy val docs = (project in file("docs"))
+  .settings(
+    libraryDependencies ++= Seq(
+      "ba.sake" %% "hepek" % "0.8.5"
+    ),
+    (hepek in Compile) := {
+      WebKeys.assets.value // run 'assets' after compiling...
+      (hepek in Compile).value
+    },
+    WebKeys.webModulesLib := "site/lib",
+    openIndexPage := openIndexPageTask.value,
+    scalaJSUseMainModuleInitializer := true
+  )
+  .dependsOn(examples)
+  .enablePlugins(HepekPlugin, SbtWeb, ScalaJSPlugin)
+
 lazy val examples = (project in file("examples"))
   .settings(
     scalaJSUseMainModuleInitializer := true
@@ -43,3 +59,12 @@ lazy val todo = (project in file("todo"))
   )
   .dependsOn(core)
   .enablePlugins(ScalaJSPlugin)
+
+val openIndexPage = taskKey[Unit]("Opens index.html")
+
+val openIndexPageTask = Def.taskDyn {
+  Def.task {
+    java.awt.Desktop      .getDesktop
+      .browse(new File(hepekTarget.value + "/site/index.html").toURI)
+  }
+}
