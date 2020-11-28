@@ -14,7 +14,6 @@ trait RxTagsStaticPage extends StaticPage with PrismDependencies {
   override def staticSiteSettings =
     super.staticSiteSettings
       .withIndexPage(site.Index)
-      .withMainPages(site.Index, site.About)
 
   override def siteSettings =
     super.siteSettings.withName("RxTags")
@@ -42,7 +41,7 @@ trait RxTagsBlogPage extends RxTagsStaticPage with HepekBootstrap3BlogPage {
 
   override def pageHeader = None
 
-  override def tocSettings = Some(TocSettings(tocType = TocType.Scrollspy(offset = 45)))
+  override def tocSettings = Some(TocSettings(tocType = TocType.Scrollspy(offset = 71)))
 
   override def categoryPosts = {
     import site._

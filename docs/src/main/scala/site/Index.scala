@@ -5,7 +5,8 @@ import utils.Imports._, Bundle._
 
 object Index extends templates.RxTagsBlogPage {
 
-  override def pageSettings = super.pageSettings.withTitle("Basics")
+  override def pageSettings =
+    super.pageSettings.withTitle("Introduction")
 
   override def blogSettings = super.blogSettings.withSections(basicsSection)
 
