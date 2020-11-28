@@ -17,11 +17,11 @@ private[rxtags] trait RxAttrValues {
 
       override def apply(element: dom.Element, attr: Attr, rxAttrValue: Rx): Unit =
         rxAttrValue.attachAndFire { newValue =>
+          implicitly[AttrValue[T]].apply(element, attr, newValue)
           attr.name match {
             case "class"  => handleClass(newValue, element)
             case attrName => ScalatagsAddons.applyAttrAndProp(element, attrName, newValue)
           }
-          implicitly[AttrValue[T]].apply(element, attr, newValue)
         }
 
       // if we have 2 Rx classes, both these handle different class names,

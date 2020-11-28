@@ -68,8 +68,7 @@ case class TodoComponent(
   private def stopEditing(): Unit = {
     isEdit$.set(false)
     val newValue = editInput.value.trim
-    if (newValue.nonEmpty) {
-      todo$.set(_.copy(name = newValue))
-    }
+    if (newValue.isEmpty) todoService.remove(todo.id)
+    else todo$.set(_.copy(name = newValue))
   }
 }

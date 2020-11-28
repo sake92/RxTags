@@ -13,6 +13,8 @@ class TodoService {
   todos$.attachAndFire { todos =>
     if (todos.length == 1) // synchronize with last element..
       toggleAllState$.set(todos.head.completed)
+    else if (todos.length > 1)
+      toggleAllState$.set(todos.forall(_.completed))
   }
 
   def add(todo: Todo): Unit =
