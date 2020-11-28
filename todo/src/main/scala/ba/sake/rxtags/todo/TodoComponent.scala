@@ -20,9 +20,6 @@ case class TodoComponent(
   private val stopEditingChannel = Channel[Unit]
   stopEditingChannel.on { stopEditing() }
 
-  private val toggleCompletedChannel = Channel[Unit]
-  toggleCompletedChannel.on { todo$.set(_.toggled) }
-
   private val editInput = input(
     onblur := { () =>
       stopEditingChannel.fire(())
@@ -44,7 +41,7 @@ case class TodoComponent(
       div(cls := "view")(
         input(
           onchange := { () =>
-            toggleCompletedChannel.fire(())
+            todo$.set(_.toggled)
           },
           checked := isChecked$,
           cls := "toggle",

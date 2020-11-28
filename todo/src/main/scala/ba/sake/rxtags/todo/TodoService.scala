@@ -25,8 +25,9 @@ class TodoService {
 
   def toggleAll(): Unit = {
     toggleAllState$.set(s => !s)
-    todos$.set {
-      todos => todos.map(_.copy(completed = toggleAllState$.now))
+    val ts = toggleAllState$.now
+    todos$.set { todos =>
+      todos.map(_.copy(completed = ts))
     }
   }
 
