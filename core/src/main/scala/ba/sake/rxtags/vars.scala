@@ -7,7 +7,7 @@ trait Reactive[T] {
   def on(f: => Unit): Unit = attach(_ => f)
 }
 
-trait Stateful[T] {
+trait Stateful[T] extends Reactive[T] {
 
   def now: T
 
@@ -19,7 +19,7 @@ object Val {
   def apply[T](initValue: => T): Val[T] = new Val(initValue)
 }
 
-final class Val[T] private (initValue: => T) extends Reactive[T] with Stateful[T] {
+final class Val[T] private (initValue: => T) extends Stateful[T] {
 
   private val rx = reactify.Val[T](initValue)
 
@@ -37,7 +37,7 @@ object Var {
   def apply[T](initValue: => T): Var[T] = new Var(initValue)
 }
 
-final class Var[T] private (initValue: => T) extends Reactive[T] with Stateful[T] {
+final class Var[T] private (initValue: => T) extends Stateful[T] {
 
   private val rx = reactify.Var[T](initValue)
 

@@ -17,9 +17,6 @@ case class TodoComponent(
     todoService.update(updated)
   }
 
-  private val startEditingChannel = Channel[Unit]
-  startEditingChannel.on { startEditing() }
-
   private val stopEditingChannel = Channel[Unit]
   stopEditingChannel.on { stopEditing() }
 
@@ -38,10 +35,10 @@ case class TodoComponent(
   ).render
 
   def render: Frag = {
-    val todoName$ = Val { span(todo$.now.name) }.asFrag
+    val todoName$ = todo$.map(_.name).asFrag
     val isChecked$ = Val { Option.when(todo$.now.completed)("checked") } // must use Option here !!!
-    val completedCls$ = Val { if (todo$.now.completed) "completed" else "" }
-    val editingCls$ = Val { if (isEdit$.now) "editing" else "" }
+    val completedCls$ = Val { Option.when(todo$.now.completed)("completed") }
+    val editingCls$ = Val { Option.when(isEdit$.now)("editing") }
 
     li(cls := editingCls$, cls := completedCls$)(
       div(cls := "view")(
@@ -53,9 +50,7 @@ case class TodoComponent(
           cls := "toggle",
           tpe := "checkbox"
         ),
-        label(ondblclick := { () =>
-          startEditingChannel.fire(())
-        })(todoName$),
+        label(ondblclick := startEditing)(span(todoName$)),
         button(
           onclick := { () =>
             todoService.remove(todo.id)
@@ -67,7 +62,7 @@ case class TodoComponent(
     )
   }
 
-  private def startEditing(): Unit = {
+  private def startEditing = () => {
     isEdit$.set(true)
     editInput.focus()
     editInput.selectionStart = editInput.value.length

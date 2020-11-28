@@ -1,6 +1,6 @@
 package ba.sake.rxtags
 
-import org.scalajs.dom.{Element, Node}
+import org.scalajs.dom
 import scalatags.JsDom.all.{Attr, AttrValue}
 
 private[rxtags] trait RxAttrValues {
@@ -15,17 +15,18 @@ private[rxtags] trait RxAttrValues {
       // classes are handled specially..
       private var classes = Set.empty[String]
 
-      override def apply(element: Element, attr: Attr, rxAttrValue: Rx): Unit =
+      override def apply(element: dom.Element, attr: Attr, rxAttrValue: Rx): Unit =
         rxAttrValue.attachAndFire { newValue =>
-          if (attr.name == "class") {
-            handleClass(newValue, element)
+          attr.name match {
+            case "class"  => handleClass(newValue, element)
+            case attrName => ScalatagsAddons.applyAttrAndProp(element, attrName, newValue)
           }
           implicitly[AttrValue[T]].apply(element, attr, newValue)
         }
 
       // if we have 2 Rx classes, both these handle different class names,
       // so we only add/remove classes for *that particular RX* !
-      private def handleClass(newValue: T, element: Element): Unit = {
+      private def handleClass(newValue: T, element: dom.Element): Unit = {
         val newValStr = newValue match {
           case opt: Option[Any] => opt.map(_.toString).getOrElse("")
           case other            => other.toString

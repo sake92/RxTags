@@ -1,10 +1,10 @@
 package ba.sake.rxtags.todo
 
-import ba.sake.rxtags._
 import org.scalajs.dom.KeyboardEvent
 import org.scalajs.dom.ext.KeyValue
 import org.scalajs.dom.html.Input
 import scalatags.JsDom.all._
+import ba.sake.rxtags._
 
 class MainComponent(todoService: TodoService) {
 
@@ -16,19 +16,8 @@ class MainComponent(todoService: TodoService) {
     todos => todos.filter(todoFilter$.now.isValid)
   }
 
-  private val addTodoChannel = Channel[KeyboardEvent]
-  addTodoChannel.attach(addTodo)
-
   private val mainDisplay$ = todos$.map(todos => if (todos.isEmpty) "none" else "block")
-
-  private val addInput = input(
-    onkeyup := { (e: KeyboardEvent) =>
-      if (e.key == KeyValue.Enter) addTodoChannel.fire(e)
-    },
-    cls := "new-todo",
-    placeholder := "What needs to be done?",
-    autofocus
-  ).render
+  private val clearCompletedDisplay$ = todos$.map(todos => if (todos.exists(_.completed)) "block" else "none")
 
   private val countFrag = todos$.map { todos =>
     val count = todos.count(!_.completed)
@@ -41,7 +30,14 @@ class MainComponent(todoService: TodoService) {
       tag("section")(cls := "todoapp")(
         header(cls := "header")(
           h1("todos"),
-          addInput
+          input(
+            onkeyup := { (e: KeyboardEvent) =>
+              if (e.key == KeyValue.Enter) addTodo(e)
+            },
+            cls := "new-todo",
+            placeholder := "What needs to be done?",
+            autofocus
+          )
         ),
         tag("section")(cls := "main", css("display") := mainDisplay$)(
           input(
@@ -73,6 +69,7 @@ class MainComponent(todoService: TodoService) {
               todoService.removeCompleted()
             },
             cls := "clear-completed",
+            css("display") := clearCompletedDisplay$,
             "Clear completed"
           )
         )
@@ -85,7 +82,8 @@ class MainComponent(todoService: TodoService) {
     ).render
 
   private def addTodo(e: KeyboardEvent): Unit = {
-    val newTodoName = e.target.asInstanceOf[Input].value.trim
+    val addInput = e.target.asInstanceOf[Input]
+    val newTodoName = addInput.value.trim
     if (newTodoName.nonEmpty) {
       val newTodo = Todo(newTodoName)
       todoService.add(newTodo)

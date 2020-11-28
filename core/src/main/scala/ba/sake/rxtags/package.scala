@@ -1,3 +1,3 @@
 package ba.sake
 
-package object rxtags extends RxFrags with RxAttrValues with ScalatagsAddons
+package object rxtags extends RxFrags with RxAttrValues with RxStyleValues with ScalatagsAddons

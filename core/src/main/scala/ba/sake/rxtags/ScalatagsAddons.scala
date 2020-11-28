@@ -16,23 +16,43 @@ private[rxtags] trait ScalatagsAddons {
         v match {
           case Some(value) =>
             ev.apply(t, a, value)
-            a.name match {
-              case "value"   => t.asInstanceOf[dom.html.Input].value = value.toString
-              case "checked" => t.asInstanceOf[dom.html.Input].checked = true
-              case _         => // noop
-            }
+            ScalatagsAddons.applyAttrAndProp(t, a.name, v)
           case None =>
             if (a.name == "class") {
               ev.apply(t, a, "".asInstanceOf[T])
             } else {
               t.removeAttribute(a.name)
-              a.name match {
-                case "value"   => t.asInstanceOf[dom.html.Input].value = ""
-                case "checked" => t.asInstanceOf[dom.html.Input].checked = false
-                case _         => // noop
-              }
+              ScalatagsAddons.applyAttrAndProp(t, a.name, v)
             }
         }
       }
     }
+}
+
+object ScalatagsAddons {
+  // not all attributes are reflected to properties, so we special-case them..
+  // https://stackoverflow.com/a/45474861/4496364
+  def applyAttrAndProp[T](element: dom.Element, attrName: String, attrValue: Any): Unit = {
+    println("applyAttrAndProp ", element.innerHTML, attrName, attrValue)
+    val currentValue = attrValue match {
+      case rx: Stateful[_] => rx.now
+      case other           => other
+    }
+    val value = currentValue match {
+      case opt: Option[_] => opt
+      case other          => Some(other)
+    }
+    value match {
+      case Some(v) => attrName match {
+          case "value"   => element.asInstanceOf[dom.html.Input].value = v.toString
+          case "checked" => element.asInstanceOf[dom.html.Input].checked = true
+          case _         => // noop
+        }
+      case None => attrName match {
+          case "value"   => element.asInstanceOf[dom.html.Input].value = ""
+          case "checked" => element.asInstanceOf[dom.html.Input].checked = false
+          case _         => // noop
+        }
+    }
+  }
 }
