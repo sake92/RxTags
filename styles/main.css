@@ -1,0 +1,14 @@
+
+body {
+  font-size: 17px;
+  padding-top: 71px; /* coz navbar */
+  margin-bottom: 55px;
+}
+
+/* anchor offset when clicking it :) https://stackoverflow.com/a/22655654/4496364 */
+:target:before {
+  content: "";
+  display: block;
+  height: 65px;
+  margin: -65px 0 0;
+}

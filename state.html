@@ -1,0 +1,93 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="ie=edge" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="generator" content="hepek" /><meta name="theme-color" content="#000" /><meta name="mobile-web-app-capable" content="yes" /><meta name="og:title" content="RxTags" /><title>State - RxTags</title><link rel="stylesheet" href="https://unpkg.com/bootswatch@3.3.7/readable/bootstrap.min.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism-coy.min.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/autolinker/prism-autolinker.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/command-line/prism-command-line.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/line-highlight/prism-line-highlight.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/line-numbers/prism-line-numbers.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/previewers/prism-previewers.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/toolbar/prism-toolbar.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/unescaped-markup/prism-unescaped-markup.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/wpd/prism-wpd.css" /><link rel="stylesheet" href="styles/main.css" /><style>
+      /* scrollspy stuff */
+      nav#tocScrollspy  .nav>li>a {
+        padding-top: 1px;
+        padding-bottom: 1px;
+        font-size: .9em;
+      }
+      nav#tocScrollspy .nav .nav>li>a {
+          padding-top: 1px;
+          padding-bottom: 1px;
+          padding-left: 3em;
+          font-size: .7em;
+      }
+      
+      /* turn off affix on screens less than md */
+      @media (max-width: 991px) { 
+          .affix { position: static; }
+      }
+      @media (min-width: 992px) {
+          /* col-3 is 25% but it's nicer like this */
+          .affix { width: 23%; }
+      }
+      @media (min-width: 992px) {
+          .affix {
+              overflow-y: auto;
+              height: 85%; /* nicer if not full height */
+          }
+      }
+      .affix { padding-left: 2em; }
+    </style></head><body><div class="container-fluid"><div class="hidden-print"><nav class="navbar navbar-default navbar-fixed-top"><div class="container-fluid"><div class="navbar-header"><button type="button" class="btn navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="index.html"> RxTags</a></div><div class="collapse navbar-collapse" id="main-navbar"><ul class="nav navbar-nav navbar-left"></ul><ul class="nav navbar-nav navbar-right"><li class=""><a href="index.html">Basics</a></li><li class=""><a href="about.html">About</a></li></ul></div></div></nav></div><div class="row"><div class="col-md-3 hidden-print"><nav class="affix"><ul class="nav nav-pills nav-stacked"><li class=""><a href="index.html">Basics</a></li><li class="active"><a href="state.html">State</a></li><li class=""><a href="view.html">View</a></li></ul></nav></div><div class="col-md-6"><div class="hidden-print"></div><article><div><section><h3 id="rx-vars">Rx Vars</h3><p>Every frontend app needs to maintain some state.<br />
+State usually has an initial value, and it can <strong>change over time</strong>.</p>
+<p>In RxTags we use <strong>reactive variables</strong>: <code>Var[T]</code>.<br />
+<code>Var[T]</code> has 2 important methods:</p>
+<ul>
+<li><code>now</code>, returns the current value of variable</li>
+<li><code>set</code>, sets the new value of variable</li>
+</ul>
+<p>For example, we could have a state variable that holds a name that user types.<br />
+We can get its current value, and set it later:</p>
+<pre><code class="language-scala">val name$ = Var(&quot;Tim&quot;)
+println(name$.now) // &quot;Tim&quot;
+
+name$.set(&quot;Jane&quot;)
+println(name$.now) // &quot;Jane&quot;
+</code></pre>
+<hr />
+<p>When we need a <em>new variable based on existing one</em>, we can use <code>map</code>:</p>
+<pre><code class="language-scala">val nameUpper$ = name$.map(n =&gt; n.toUpperCase)
+</code></pre>
+<p>The <code>nameUpper$</code> variable now holds a value which is equal to uppercased <code>name$</code> value.<br />
+This gets very useful when we need to display a <code>Var</code> in HTML.<br />
+We will see that in the next section.</p>
+<hr />
+<p>When we need to listen for a variable change, we use the <code>attach</code> method:</p>
+<pre><code class="language-scala">name$.attach { n =&gt;
+  println(s&quot;Name is now: $n&quot;)
+}
+</code></pre>
+</section><section><h3 id="rx-vals">Rx Vals</h3><p>We also have Rx <code>Val</code>s.<br />
+These are reactive values that <strong>cannot be set</strong>.<br />
+They are just a composition of other <code>Var</code>s/<code>Val</code>s.</p>
+<p>Example:</p>
+<pre><code class="language-scala">val nameUpper$ = Val {
+  val current = name$.now
+  if (current.isEmpty) &quot;&lt;EMPTY&gt;&quot;
+  else current.toUpperCase
+}
+</code></pre>
+<p>Here we see again the <code>nameUpper$</code> variable.<br />
+Now it has a bit of logic in there.<br />
+But we could achieve the same result with <code>map</code>...</p>
+<p>The difference it makes is when you have <strong>multiple dependencies</strong>:</p>
+<pre><code class="language-scala">val name$ = Var(&quot;Tim&quot;)
+val age$ = Var(29)
+
+val nameAndAge$ = Val {
+  val currentName = name$.now
+  val currentAge = age$.now
+  s&quot;$currentName is $currentAge years old.&quot;
+}
+</code></pre>
+</section></div></article><div id="disqus_thread" class="hidden-print"></div></div><div class="col-md-3 hidden-sm hidden-xs hidden-print"><nav id="tocScrollspy"><ul class="nav nav-pills nav-stacked"><li><a href="#rx-vars">Rx Vars</a><ul class="nav nav-pills nav-stacked"></ul></li><li><a href="#rx-vals">Rx Vals</a><ul class="nav nav-pills nav-stacked"></ul></li></ul></nav></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script><script src="https://unpkg.com/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-clike.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-scala.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-java.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-markup.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/autolinker/prism-autolinker.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/command-line/prism-command-line.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/data-uri-highlight/prism-data-uri-highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/file-highlight/prism-file-highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/jsonp-highlight/prism-jsonp-highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/line-highlight/prism-line-highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/normalize-whitespace/prism-normalize-whitespace.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/previewers/prism-previewers.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/toolbar/prism-toolbar.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/unescaped-markup/prism-unescaped-markup.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/wpd/prism-wpd.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/keep-markup/prism-keep-markup.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/show-language/prism-show-language.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script><script src="scripts/docs-fastopt.js"></script><script>
+            // activate scrollspy on body
+            $('body').scrollspy({
+                target: '#tocScrollspy',
+                offset: 45 // ~~ when the first heading starts...
+            });
+            
+            // fix scrollspy for current page sections
+            $('#tocScrollspy').affix({
+                offset: { top: 10 } // when to start moving fixed div
+            });
+          </script></body></html>
