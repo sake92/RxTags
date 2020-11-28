@@ -40,7 +40,7 @@ trait RxTagsBlogPage extends RxTagsStaticPage with HepekBootstrap3BlogPage {
 
   override def pageHeader = None
 
-  override def tocSettings = Some(TocSettings(tocType = TocType.Scrollspy(offset = 65)))
+  override def tocSettings = Some(TocSettings(tocType = TocType.Scrollspy(offset = 45)))
 
   override def categoryPosts = {
     import site._
