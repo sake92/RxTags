@@ -17,9 +17,8 @@ object Ex5 extends Example {
     1000
   )
 
-  def content = div(
-    ticker$.map { c =>
-      s"Ticker: $c"
-    }.asFrag
-  )
+  def content = ticker$.map { c =>
+    s"Ticker: $c"
+  }.asFrag
+
 }

@@ -1,3 +1,4 @@
+
 inThisBuild(
   List(
     organization := "ba.sake",
@@ -29,11 +30,13 @@ lazy val core = (project in file("core"))
 lazy val docs = (project in file("docs"))
   .settings(
     libraryDependencies ++= Seq(
-      "ba.sake" %% "hepek" % "0.8.5"
+      "ba.sake" %% "hepek" % "0.8.5+0-d8a37030+20201127-2307-SNAPSHOT"
     ),
     (hepek in Compile) := {
-      WebKeys.assets.value // run 'assets' after compiling...
-      (hepek in Compile).value
+      (examples / Compile / fastOptJS).value // generate examples JS
+      (Compile / fastOptJS).value // generate docs JS
+      WebKeys.assets.value // run assets
+      (Compile / hepek).value
     },
     WebKeys.webModulesLib := "site/lib",
     openIndexPage := openIndexPageTask.value,

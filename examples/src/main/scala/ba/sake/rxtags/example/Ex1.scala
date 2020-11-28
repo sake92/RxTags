@@ -8,9 +8,9 @@ object Ex1 extends Example {
   val number = 123
 
   def content = div(
-    h4("Scalatags example"),
+    h4("ScalaTags example"),
     footer(cls := "whatever")(
-      s"Hello, visitor number $number"
+      s"Hello, visitor number: $number"
     )
   )
 }
