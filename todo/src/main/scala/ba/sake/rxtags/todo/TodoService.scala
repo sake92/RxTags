@@ -6,9 +6,14 @@ import ba.sake.rxtags._
 
 class TodoService {
 
-  private val toggleAllState$ = Var(false)
+  val toggleAllState$ = Var(false)
 
   val todos$ : Var[List[Todo]] = initTodos()
+
+  todos$.attachAndFire { todos =>
+    if (todos.length == 1) // synchronize with last element..
+      toggleAllState$.set(todos.head.completed)
+  }
 
   def add(todo: Todo): Unit =
     todos$.set(todos => todos.appended(todo))
@@ -34,11 +39,10 @@ class TodoService {
   private def initTodos() = {
     import upickle.default._
 
-    val TodosKey = "TODOS"
+    val TodosKey = "todos-RxTags"
     val savedTodosJson = dom.window.localStorage.getItem(TodosKey)
     val todos =
-      if (savedTodosJson == null)
-        List(Todo("Create a TodoMVC template", completed = true), Todo("Rule the web"))
+      if (savedTodosJson == null) List(Todo("Create a TodoMVC template", completed = true), Todo("Rule the web"))
       else read[List[Todo]](savedTodosJson)
 
     val initTodos$ = Var(todos)

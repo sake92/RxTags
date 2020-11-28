@@ -33,7 +33,6 @@ object ScalatagsAddons {
   // not all attributes are reflected to properties, so we special-case them..
   // https://stackoverflow.com/a/45474861/4496364
   def applyAttrAndProp[T](element: dom.Element, attrName: String, attrValue: Any): Unit = {
-    println("applyAttrAndProp ", element.innerHTML, attrName, attrValue)
     val currentValue = attrValue match {
       case rx: Stateful[_] => rx.now
       case other           => other

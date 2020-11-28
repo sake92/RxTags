@@ -18,12 +18,7 @@ class MainComponent(todoService: TodoService) {
 
   private val mainDisplay$ = todos$.map(todos => if (todos.isEmpty) "none" else "block")
   private val clearCompletedDisplay$ = todos$.map(todos => if (todos.exists(_.completed)) "block" else "none")
-
-  private val countFrag = todos$.map { todos =>
-    val count = todos.count(!_.completed)
-    val itemsLabel = if (count == 1) "item" else "items"
-    div(strong(count), s" $itemsLabel left")
-  }.asFrag
+  private val toggleAllChecked$ = Val { Option.when(todoService.toggleAllState$.now)("checked") }
 
   def render =
     div(
@@ -41,12 +36,13 @@ class MainComponent(todoService: TodoService) {
         ),
         tag("section")(cls := "main", css("display") := mainDisplay$)(
           input(
+            tpe := "checkbox",
+            checked := toggleAllChecked$,
             onclick := { () =>
               todoService.toggleAll()
             },
             id := "toggle-all",
-            cls := "toggle-all",
-            tpe := "checkbox"
+            cls := "toggle-all"
           ),
           label(`for` := "toggle-all", "Mark all as complete"),
           ul(cls := "todo-list")(
@@ -58,7 +54,13 @@ class MainComponent(todoService: TodoService) {
           )
         ),
         footer(cls := "footer", css("display") := mainDisplay$)(
-          span(cls := "todo-count")(countFrag),
+          span(cls := "todo-count")(
+            todos$.map { todos =>
+              val count = todos.count(!_.completed)
+              val itemsLabel = if (count == 1) "item" else "items"
+              frag(strong(count), s" $itemsLabel left")
+            }.asFrag
+          ),
           ul(cls := "filters")(
             li(a(data.navigate := "/", cls := selectedCls(TodoFilter.All))("All")),
             li(a(data.navigate := "/active", cls := selectedCls(TodoFilter.Active))("Active")),
