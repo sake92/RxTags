@@ -7,82 +7,79 @@ object State extends templates.RxTagsBlogPage {
 
   override def pageSettings = super.pageSettings.withTitle("State")
 
-  override def blogSettings = super.blogSettings.withSections(basicsSection)
+  override def blogSettings = super.blogSettings.withSections(rxVarsSection, rxValsSection)
 
-  val basicsSection = Section(
-    "State",
-    div(
-      s"""
+  def rxVarsSection = Section(
+    "Rx Vars",
+    """
       Every frontend app needs to maintain some state.  
       State usually has an initial value, and it can **change over time**.  
       
       In RxTags we use **reactive variables**: `Var[T]`.  
-      It has 2 important methods:
+      `Var[T]` has 2 important methods:
       - `now`, returns the current value of variable
       - `set`, sets the new value of variable
       
-      Other convenient methods:
-      - `map`, returns a new variable based on this one
-      - `attach`, attaches a listener, gets triggered on each update of variable
-      
-      ---
-      Let's see an example!  
-      But first we need some additional imports:
+      For example, we could have a state variable that holds a name that user types.  
+      We can get its current value, and set it later:
       ```scala
-      import org.scalajs.dom
-      import ba.sake.rxtags._
+      val name$ = Var("Tim")
+      println(name$.now) // "Tim"
+      
+      name$.set("Jane")
+      println(name$.now) // "Jane"
       ```
       
-      Here is an example of a ticker, it counts the number of seconds passed:
-      """.md,
-      chl.scala.withLineHighlight("1,4,8")("""
-        val ticker$ = Var(0)
-
-        dom.window.setInterval(
-          () => { ticker$.set(t => t + 1) },
-          1000
-        )
-      
-        def content = ticker$.map { c =>
-          s"Ticker: $c"
-        }.asFrag
-      """),
-      b("Result:"),
-      Panel.panel(Panel.Companion.Type.Default, div(id := "ex5")),
-      """
-      At line <mark>1</mark> we declare a reactive variable, `Var[Int]` with an initial value of `0`.  
-      
-      Next, at line <mark>4</mark> we increment it, every second.  
-      
-      Finally, at line <mark>8</mark> we `map` it to HTML.  
-      When we `map` a `Var[T]` to a `Var[Frag]`,
-      ScalaTags doesn't know how to render it to DOM.  
-      That's why we need to call `asFrag` on it.
+      ---
+      When we need a *new variable based on existing one*, we can use `map`:
+      ```scala
+      val nameUpper$ = name$.map(n => n.toUpperCase)
+      ```
+      The `nameUpper$` variable now holds a value which is equal to uppercased `name$` value.  
+      This gets very useful when we need to display a `Var` in HTML.  
+      We will see that in the next section.
       
       ---
-      Here is another example, using an event handler:
-      """.md,
-      chl.scala.withLineHighlight("1,5,7,15")("""
-        val name$ = Var("")
-
-        def content = div(
-          "Please enter your name: ",
-          input(onkeyup := updateName),
-          br,
-          name$.map { name =>
-            s"Your name: $name"
-          }.asFrag
-        )
-      
-        def updateName: (dom.KeyboardEvent => Unit) =
-          e => {
-            val inputField = e.target.asInstanceOf[Input]
-            name$.set(inputField.value)
-          }
-      """),
-      b("Result:"),
-      Panel.panel(Panel.Companion.Type.Default, div(id := "ex3"))
-    )
+      When we need to listen for a variable change, we use the `attach` method:
+      ```scala
+      name$.attach { n =>
+        println(s"Name is now: $n")
+      }
+      ```
+    """.md
   )
 
+  def rxValsSection = Section(
+    "Rx Vals",
+    """
+      We also have Rx `Val`s.  
+      These are reactive values that **cannot be set**.   
+      They are just a composition of other `Var`s/`Val`s.
+      
+      Example:
+      ```scala
+      val nameUpper$ = Val {
+        val current = name$.now
+        if (current.isEmpty) "<EMPTY>"
+        else current.toUpperCase
+      }
+      ```
+      Here we see again the `nameUpper$` variable.  
+      Now it has a bit of logic in there.  
+      But we could achieve the same result with `map`...
+      
+      The difference it makes is when you have **multiple dependencies**:
+      
+      ```scala
+      val name$ = Var("Tim")
+      val age$ = Var(29)
+    
+      val nameAndAge$ = Val {
+        val currentName = name$.now
+        val currentAge = age$.now
+        s"$currentName is $currentAge years old."
+      }
+      ```
+    """.md
+  )
 }

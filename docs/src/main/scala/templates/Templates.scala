@@ -1,11 +1,11 @@
 package templates
 
 import ba.sake.hepek.theme.bootstrap3.HepekBootstrap3BlogPage
-import ba.sake.hepek.Resources._
-import ba.sake.hepek.prismjs.{PrismDependencies, PrismSettings, Themes}
-import utils.Imports.Bundle._
 import ba.sake.hepek.theme.bootstrap3.TocSettings
 import ba.sake.hepek.theme.bootstrap3.TocType
+import ba.sake.hepek.prismjs.{PrismDependencies, PrismSettings, Themes}
+import ba.sake.hepek.Resources._
+import utils.Imports.Bundle._
 
 trait RxTagsStaticPage extends StaticPage with PrismDependencies {
 
@@ -46,6 +46,6 @@ trait RxTagsBlogPage extends RxTagsStaticPage with HepekBootstrap3BlogPage {
 
   override def categoryPosts = {
     import site._
-    List(Index, State)
+    List(Index, State, View)
   }
 }
