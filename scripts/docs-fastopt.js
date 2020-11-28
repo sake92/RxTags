@@ -816,15 +816,11 @@ function $h_Lba_sake_rxtags_ScalatagsAddons$() {
 }
 $h_Lba_sake_rxtags_ScalatagsAddons$.prototype = $c_Lba_sake_rxtags_ScalatagsAddons$.prototype;
 $c_Lba_sake_rxtags_ScalatagsAddons$.prototype.applyAttrAndProp__Lorg_scalajs_dom_raw_Element__T__O__V = (function(element, attrName, attrValue) {
-  var x = new $c_T4("applyAttrAndProp ", $as_T(element.innerHTML), attrName, attrValue);
-  var this$2 = $m_s_Console$();
-  var this$3 = this$2.out__Ljava_io_PrintStream();
-  this$3.java$lang$JSConsoleBasedPrintStream$$printString__T__V((x + "\n"));
   var currentValue;
   if ($is_Lba_sake_rxtags_Stateful(attrValue)) {
     var x2 = $as_Lba_sake_rxtags_Stateful(attrValue);
-    var this$4 = x2.Lba_sake_rxtags_Var__f_rx;
-    currentValue = $m_Lreactify_Val$().get__Lreactify_Val__O(this$4)
+    var this$1 = x2.Lba_sake_rxtags_Var__f_rx;
+    currentValue = $m_Lreactify_Val$().get__Lreactify_Val__O(this$1)
   } else {
     currentValue = attrValue
   };
@@ -844,8 +840,8 @@ $c_Lba_sake_rxtags_ScalatagsAddons$.prototype.applyAttrAndProp__Lorg_scalajs_dom
       element.checked = true
     }
   } else {
-    var x$1 = $m_s_None$();
-    if ((x$1 === value)) {
+    var x = $m_s_None$();
+    if ((x === value)) {
       if ((attrName === "value")) {
         element.value = ""
       } else if ((attrName === "checked")) {
@@ -7865,29 +7861,6 @@ function $f_s_Product2__productElement__I__O($thiz, n) {
     }
   }
 }
-function $f_s_Product4__productElement__I__O($thiz, n) {
-  switch (n) {
-    case 0: {
-      return $thiz.T4__f__1;
-      break
-    }
-    case 1: {
-      return $thiz.T4__f__2;
-      break
-    }
-    case 2: {
-      return $thiz.T4__f__3;
-      break
-    }
-    case 3: {
-      return $thiz.T4__f__4;
-      break
-    }
-    default: {
-      throw $ct_jl_IndexOutOfBoundsException__T__(new $c_jl_IndexOutOfBoundsException(), (n + " is out of bounds (min 0, max 3)"))
-    }
-  }
-}
 var $ct_sc_IterableFactory$Delegate__sc_IterableFactory__ = (function($thiz, delegate) {
   $thiz.sc_IterableFactory$Delegate__f_delegate = delegate;
   return $thiz
@@ -13202,73 +13175,6 @@ var $d_T2 = new $TypeData().initClass({
   Ljava_io_Serializable: 1
 });
 $c_T2.prototype.$classData = $d_T2;
-/** @constructor */
-function $c_T4(_1, _2, _3, _4) {
-  this.T4__f__1 = null;
-  this.T4__f__2 = null;
-  this.T4__f__3 = null;
-  this.T4__f__4 = null;
-  this.T4__f__1 = _1;
-  this.T4__f__2 = _2;
-  this.T4__f__3 = _3;
-  this.T4__f__4 = _4
-}
-$c_T4.prototype = new $h_O();
-$c_T4.prototype.constructor = $c_T4;
-/** @constructor */
-function $h_T4() {
-  /*<skip>*/
-}
-$h_T4.prototype = $c_T4.prototype;
-$c_T4.prototype.productArity__I = (function() {
-  return 4
-});
-$c_T4.prototype.productElement__I__O = (function(n) {
-  return $f_s_Product4__productElement__I__O(this, n)
-});
-$c_T4.prototype.toString__T = (function() {
-  return (((((((("(" + this.T4__f__1) + ",") + this.T4__f__2) + ",") + this.T4__f__3) + ",") + this.T4__f__4) + ")")
-});
-$c_T4.prototype.productPrefix__T = (function() {
-  return "Tuple4"
-});
-$c_T4.prototype.productIterator__sc_Iterator = (function() {
-  return new $c_sr_ScalaRunTime$$anon$1(this)
-});
-$c_T4.prototype.hashCode__I = (function() {
-  var this$2 = $m_s_util_hashing_MurmurHash3$();
-  return this$2.productHash__s_Product__I__Z__I(this, (-889275714), false)
-});
-$c_T4.prototype.equals__O__Z = (function(x$1) {
-  if ((this === x$1)) {
-    return true
-  } else if ((x$1 instanceof $c_T4)) {
-    var Tuple4$1 = $as_T4(x$1);
-    return ((($m_sr_BoxesRunTime$().equals__O__O__Z(this.T4__f__1, Tuple4$1.T4__f__1) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.T4__f__2, Tuple4$1.T4__f__2)) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.T4__f__3, Tuple4$1.T4__f__3)) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.T4__f__4, Tuple4$1.T4__f__4))
-  } else {
-    return false
-  }
-});
-function $as_T4(obj) {
-  return (((obj instanceof $c_T4) || (obj === null)) ? obj : $throwClassCastException(obj, "scala.Tuple4"))
-}
-function $isArrayOf_T4(obj, depth) {
-  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.T4)))
-}
-function $asArrayOf_T4(obj, depth) {
-  return (($isArrayOf_T4(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lscala.Tuple4;", depth))
-}
-var $d_T4 = new $TypeData().initClass({
-  T4: 0
-}, false, "scala.Tuple4", {
-  T4: 1,
-  O: 1,
-  s_Product4: 1,
-  s_Product: 1,
-  s_Equals: 1,
-  Ljava_io_Serializable: 1
-});
-$c_T4.prototype.$classData = $d_T4;
 function $f_sc_IndexedSeqOps__drop__I__O($thiz, n) {
   return $thiz.fromSpecific__sc_IterableOnce__O(new $c_sc_IndexedSeqView$Drop($thiz, n))
 }
