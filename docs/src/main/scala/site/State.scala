@@ -75,9 +75,7 @@ object State extends templates.RxTagsBlogPage {
       val age$ = Var(29)
     
       val nameAndAge$ = Val {
-        val currentName = name$.now
-        val currentAge = age$.now
-        s"$currentName is $currentAge years old."
+        s"${name$.now} is ${age$.now} years old."
       }
       ```
     """.md
