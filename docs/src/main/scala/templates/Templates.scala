@@ -15,15 +15,13 @@ trait RxTagsStaticPage extends StaticPage with PrismDependencies {
       .withMainPages(site.Index, site.About)
 
   override def siteSettings =
-    super.siteSettings
-      .withName("RxTags")
-      .withFaviconNormal(images.ico("favicon").ref)
-      .withFaviconInverted(images.ico("favicon").ref)
+    super.siteSettings.withName("RxTags")
 
   override def navbar = Some(Navbar)
 
   override def prismSettings = super.prismSettings
     .withTheme(Themes.Coy)
+    .withLanguages("core", "clike", "scala", "java", "markup")
 
   override def bootstrapDependencies =
     super.bootstrapDependencies.withCssDependencies(
@@ -34,15 +32,15 @@ trait RxTagsStaticPage extends StaticPage with PrismDependencies {
   override def styleURLs = super.styleURLs.appended(styles.css("main").ref)
 
   override def scriptURLs =
-    super.scriptURLs.appended(scripts.js("main").ref)
-      .appended("../../../../scala-2.13/docs-fastopt.js")
+    super.scriptURLs
+      .appended(scripts.js("docs-fastopt").ref)
 }
 
 trait RxTagsBlogPage extends RxTagsStaticPage with HepekBootstrap3BlogPage {
 
   override def pageHeader = None
 
-  override def tocSettings = Some(TocSettings(tocType = TocType.Scrollspy(offset = 60)))
+  override def tocSettings = Some(TocSettings(tocType = TocType.Scrollspy(offset = 65)))
 
   override def categoryPosts = {
     import site._

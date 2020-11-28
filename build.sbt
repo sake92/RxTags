@@ -1,4 +1,3 @@
-
 inThisBuild(
   List(
     organization := "ba.sake",
@@ -30,17 +29,22 @@ lazy val core = (project in file("core"))
 lazy val docs = (project in file("docs"))
   .settings(
     libraryDependencies ++= Seq(
-      "ba.sake" %% "hepek" % "0.8.5+0-d8a37030+20201127-2307-SNAPSHOT"
+      "ba.sake" %% "hepek" % "0.8.5+2-5ea855d0-SNAPSHOT"
     ),
-    (hepek in Compile) := {
-      (examples / Compile / fastOptJS).value // generate examples JS
+    (Compile / hepek) := {
+      // (examples / Compile / fastOptJS).value // generate examples JS
       (Compile / fastOptJS).value // generate docs JS
       WebKeys.assets.value // run assets
       (Compile / hepek).value
     },
-    WebKeys.webModulesLib := "site/lib",
+    resolvers += Resolver.sonatypeRepo("snapshots"),
     openIndexPage := openIndexPageTask.value,
-    scalaJSUseMainModuleInitializer := true
+    scalaJSUseMainModuleInitializer := true,
+    // sbt-web
+    // https://stackoverflow.com/a/29375359/4496364
+    (Compile / fastOptJS / artifactPath) :=
+      (Assets / WebKeys.public).value / "site" / "scripts" / ((moduleName in fastOptJS).value + "-fastopt.js"),
+    WebKeys.webModulesLib := "site/lib"
   )
   .dependsOn(examples)
   .enablePlugins(HepekPlugin, SbtWeb, ScalaJSPlugin)
@@ -67,7 +71,7 @@ val openIndexPage = taskKey[Unit]("Opens index.html")
 
 val openIndexPageTask = Def.taskDyn {
   Def.task {
-    java.awt.Desktop      .getDesktop
+    java.awt.Desktop.getDesktop
       .browse(new File(hepekTarget.value + "/site/index.html").toURI)
   }
 }
