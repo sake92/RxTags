@@ -3,11 +3,13 @@ package templates
 import ba.sake.hepek.theme.bootstrap3.HepekBootstrap3BlogPage
 import ba.sake.hepek.theme.bootstrap3.TocSettings
 import ba.sake.hepek.theme.bootstrap3.TocType
-import ba.sake.hepek.prismjs.{PrismDependencies, PrismSettings, Themes}
+import ba.sake.hepek.prismjs.{PrismDependencies, PrismSettings, PrismConsts, Themes}
 import ba.sake.hepek.Resources._
 import utils.Imports.Bundle._
 
 trait RxTagsStaticPage extends StaticPage with PrismDependencies {
+  // dont have to remember ordering of these.. filter below!
+  private val hlLangs = Set("core", "clike", "scala", "java", "markup")
 
   override def staticSiteSettings =
     super.staticSiteSettings
@@ -21,7 +23,7 @@ trait RxTagsStaticPage extends StaticPage with PrismDependencies {
 
   override def prismSettings = super.prismSettings
     .withTheme(Themes.Coy)
-    .withLanguages("core", "clike", "scala", "java", "markup")
+    .withLanguages(PrismConsts.languages.filter(hlLangs))
 
   override def bootstrapDependencies =
     super.bootstrapDependencies.withCssDependencies(
