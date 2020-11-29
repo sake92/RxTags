@@ -22,6 +22,6 @@ object Main {
         mainComponent
     }
 
-    router.withRoutesData("main", routes, mainComponent).init()
+    router.withRoutesData("main", routes).init()
   }
 }

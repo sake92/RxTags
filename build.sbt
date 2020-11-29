@@ -26,6 +26,24 @@ lazy val core = (project in file("core"))
   )
   .enablePlugins(ScalaJSPlugin)
 
+lazy val examples = (project in file("examples"))
+  .settings(
+    scalaJSUseMainModuleInitializer := true
+  )
+  .dependsOn(core)
+  .enablePlugins(ScalaJSPlugin)
+
+lazy val todo = (project in file("todo"))
+  .settings(
+    scalaJSUseMainModuleInitializer := true,
+    libraryDependencies ++= Seq(
+      "com.lihaoyi" %%% "upickle" % "1.2.0",
+      "ba.sake" %%% "scalajs-router" % "0.0.8"
+    )
+  )
+  .dependsOn(core)
+  .enablePlugins(ScalaJSPlugin)
+
 lazy val docs = (project in file("docs"))
   .settings(
     libraryDependencies ++= Seq(
@@ -48,24 +66,6 @@ lazy val docs = (project in file("docs"))
   )
   .dependsOn(examples)
   .enablePlugins(HepekPlugin, SbtWeb, ScalaJSPlugin)
-
-lazy val examples = (project in file("examples"))
-  .settings(
-    scalaJSUseMainModuleInitializer := true
-  )
-  .dependsOn(core)
-  .enablePlugins(ScalaJSPlugin)
-
-lazy val todo = (project in file("todo"))
-  .settings(
-    scalaJSUseMainModuleInitializer := true,
-    libraryDependencies ++= Seq(
-      "com.lihaoyi" %%% "upickle" % "1.2.0",
-      "ba.sake" %%% "scalajs-router" % "0.0.7"
-    )
-  )
-  .dependsOn(core)
-  .enablePlugins(ScalaJSPlugin)
 
 val openIndexPage = taskKey[Unit]("Opens index.html")
 
