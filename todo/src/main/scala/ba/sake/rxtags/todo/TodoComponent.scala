@@ -17,17 +17,13 @@ case class TodoComponent(
     todoService.update(updated)
   }
 
-  private val stopEditingChannel = Channel[Unit]
-  stopEditingChannel.on { stopEditing() }
-
   private val editInput = input(
-    onblur := { () =>
-      stopEditingChannel.fire(())
-    },
+    onblur := { () => stopEditing(true) },
     onkeyup := { (e: KeyboardEvent) =>
-      if (e.key == KeyValue.Enter) stopEditingChannel.fire(())
+      if (e.key == KeyValue.Enter) stopEditing(true)
+      else if (e.key == KeyValue.Escape) stopEditing(false)
     },
-    value := todo$.map(_.name),
+    value := todo.name,
     cls := "edit"
   ).render
 
@@ -65,10 +61,15 @@ case class TodoComponent(
     editInput.selectionStart = editInput.value.length
   }
 
-  private def stopEditing(): Unit = {
+  private def stopEditing(doUpdate: Boolean): Unit = {
     isEdit$.set(false)
-    val newValue = editInput.value.trim
-    if (newValue.isEmpty) todoService.remove(todo.id)
-    else todo$.set(_.copy(name = newValue))
+    editInput.value = editInput.value.trim
+    if (doUpdate) {
+      val newValue = editInput.value
+      if (newValue.isEmpty) todoService.remove(todo.id)
+      else todo$.set(_.copy(name = newValue))
+    } else { // when ESC is pressed, return to previous value
+      editInput.value = todo$.now.name
+    }
   }
 }

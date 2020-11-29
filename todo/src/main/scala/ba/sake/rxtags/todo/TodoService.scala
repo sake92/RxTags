@@ -43,11 +43,11 @@ class TodoService {
 
     val TodosKey = "todos-RxTags"
     val savedTodosJson = dom.window.localStorage.getItem(TodosKey)
-    val todos =
-      if (savedTodosJson == null) List(Todo("Create a TodoMVC template", completed = true), Todo("Rule the web"))
+    val savedTodos =
+      if (savedTodosJson == null) List.empty
       else read[List[Todo]](savedTodosJson)
 
-    val initTodos$ = Var(todos)
+    val initTodos$ = Var(savedTodos)
     initTodos$.attach { newValue =>
       dom.window.localStorage.setItem(TodosKey, write(newValue))
     }
