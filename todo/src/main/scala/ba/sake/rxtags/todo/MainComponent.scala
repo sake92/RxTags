@@ -4,9 +4,10 @@ import org.scalajs.dom.KeyboardEvent
 import org.scalajs.dom.ext.KeyValue
 import org.scalajs.dom.html.Input
 import scalatags.JsDom.all._
+import ba.sake.scalajs_router.{Component, Router}
 import ba.sake.rxtags._
 
-class MainComponent(todoService: TodoService) {
+class MainComponent(todoService: TodoService, router: Router) extends Component {
 
   val todoFilter$ = Var(TodoFilter.All)
 
@@ -20,7 +21,7 @@ class MainComponent(todoService: TodoService) {
   private val clearCompletedDisplay$ = todos$.map(todos => if (todos.exists(_.completed)) "block" else "none")
   private val toggleAllChecked$ = Val { Option.when(todoService.toggleAllState$.now)("checked") }
 
-  def render =
+  def asElement =
     div(
       tag("section")(cls := "todoapp")(
         header(cls := "header")(
@@ -62,9 +63,24 @@ class MainComponent(todoService: TodoService) {
             }.asFrag
           ),
           ul(cls := "filters")(
-            li(a(data.navigate := "/", cls := selectedCls(TodoFilter.All))("All")),
-            li(a(data.navigate := "/active", cls := selectedCls(TodoFilter.Active))("Active")),
-            li(a(data.navigate := "/completed", cls := selectedCls(TodoFilter.Completed))("Completed"))
+            li(
+              a(
+                onclick := { () => router.navigateTo("/") },
+                cls := selectedCls(TodoFilter.All)
+              )("All")
+            ),
+            li(
+              a(
+                onclick := { () => router.navigateTo("/active") },
+                cls := selectedCls(TodoFilter.Active)
+              )("Active")
+            ),
+            li(
+              a(
+                onclick := { () => router.navigateTo("/completed") },
+                cls := selectedCls(TodoFilter.Completed)
+              )("Completed")
+            )
           ),
           button(
             onclick := { () =>

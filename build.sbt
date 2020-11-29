@@ -61,7 +61,7 @@ lazy val todo = (project in file("todo"))
     scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
       "com.lihaoyi" %%% "upickle" % "1.2.0",
-      "ba.sake" %%% "scalajs-router" % "0.0.5"
+      "ba.sake" %%% "scalajs-router" % "0.0.7"
     )
   )
   .dependsOn(core)

@@ -1,22 +1,27 @@
 package ba.sake.rxtags.todo
 
-import org.scalajs.dom
 import ba.sake.scalajs_router.Router
 
 object Main {
 
   def main(args: Array[String]): Unit = {
 
+    val router = Router()
     val todoService = new TodoService
-    val mainComponent = new MainComponent(todoService)
+    val mainComponent = new MainComponent(todoService, router)
 
-    val root = dom.document.getElementById("main")
-    root.appendChild(mainComponent.render)
+    val routes: Router.Routes = {
+      case "/active" =>
+        mainComponent.todoFilter$.set(TodoFilter.Active)
+        mainComponent
+      case "/completed" =>
+        mainComponent.todoFilter$.set(TodoFilter.Completed)
+        mainComponent
+      case _ =>
+        mainComponent.todoFilter$.set(TodoFilter.All)
+        mainComponent
+    }
 
-    Router().withBaseUrl("/RxTags/todo").withListener {
-      case "/active"    => mainComponent.todoFilter$.set(TodoFilter.Active)
-      case "/completed" => mainComponent.todoFilter$.set(TodoFilter.Completed)
-      case _            => mainComponent.todoFilter$.set(TodoFilter.All)
-    }.init()
+    router.withRoutesData("main", routes, mainComponent).init()
   }
 }
