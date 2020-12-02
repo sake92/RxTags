@@ -18,8 +18,8 @@ object Ex6 extends Example {
     )
   )
 
-  def content = cartItems$.map { items =>
-    ul(
+  def content = ul(
+    cartItems$.map { items =>
       items.map { item =>
         li(
           b(item.count),
@@ -27,13 +27,13 @@ object Ex6 extends Example {
           button(onclick := delete(item))("Delete")
         )
       }
-    )
-  }.asFrag
+    }.asFrag
+  )
 
   def delete(item: CartItem): (dom.Event => Unit) =
-    e => {
+    e =>
       cartItems$.set { currentItems =>
         currentItems.filterNot(_ == item)
       }
-    }
+
 }

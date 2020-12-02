@@ -1,9 +1,9 @@
 package ba.sake.rxtags.todo
 
-import ba.sake.rxtags._
+import org.scalajs.dom
 import org.scalajs.dom.ext.KeyValue
-import org.scalajs.dom.raw.KeyboardEvent
 import scalatags.JsDom.all._
+import ba.sake.rxtags._
 
 case class TodoComponent(
     todoService: TodoService,
@@ -19,7 +19,7 @@ case class TodoComponent(
 
   private val editInput = input(
     onblur := { () => stopEditing(true) },
-    onkeyup := { (e: KeyboardEvent) =>
+    onkeyup := { (e: dom.KeyboardEvent) =>
       if (e.key == KeyValue.Enter) stopEditing(true)
       else if (e.key == KeyValue.Escape) stopEditing(false)
     },
@@ -36,18 +36,14 @@ case class TodoComponent(
     li(cls := editingCls$, cls := completedCls$)(
       div(cls := "view")(
         input(
-          onchange := { () =>
-            todo$.set(_.toggled)
-          },
+          onchange := { () => todo$.set(_.toggled) },
           checked := isChecked$,
           cls := "toggle",
           tpe := "checkbox"
         ),
         label(ondblclick := startEditing)(span(todoName$)),
         button(
-          onclick := { () =>
-            todoService.remove(todo.id)
-          },
+          onclick := { () => todoService.remove(todo.id) },
           cls := "destroy"
         )
       ),

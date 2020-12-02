@@ -1,10 +1,11 @@
 package ba.sake.rxtags.todo
 
-import org.scalajs.dom.KeyboardEvent
+import org.scalajs.dom
 import org.scalajs.dom.ext.KeyValue
-import org.scalajs.dom.html.Input
+import org.scalajs.dom.html
 import scalatags.JsDom.all._
-import ba.sake.scalajs_router.{Component, Router}
+import scalatags.JsDom.tags2.section
+import ba.sake.scalajs_router._
 import ba.sake.rxtags._
 
 class MainComponent(todoService: TodoService, router: Router) extends Component {
@@ -23,11 +24,11 @@ class MainComponent(todoService: TodoService, router: Router) extends Component 
 
   def asElement =
     div(
-      tag("section")(cls := "todoapp")(
+      section(cls := "todoapp")(
         header(cls := "header")(
           h1("todos"),
           input(
-            onkeyup := { (e: KeyboardEvent) =>
+            onkeyup := { (e: dom.KeyboardEvent) =>
               if (e.key == KeyValue.Enter) addTodo(e)
             },
             cls := "new-todo",
@@ -35,13 +36,11 @@ class MainComponent(todoService: TodoService, router: Router) extends Component 
             autofocus
           )
         ),
-        tag("section")(cls := "main", css("display") := mainDisplay$)(
+        section(cls := "main", css("display") := mainDisplay$)(
           input(
             tpe := "checkbox",
             checked := toggleAllChecked$,
-            onclick := { () =>
-              todoService.toggleAll()
-            },
+            onclick := { () => todoService.toggleAll() },
             id := "toggle-all",
             cls := "toggle-all"
           ),
@@ -83,9 +82,7 @@ class MainComponent(todoService: TodoService, router: Router) extends Component 
             )
           ),
           button(
-            onclick := { () =>
-              todoService.removeCompleted()
-            },
+            onclick := { () => todoService.removeCompleted() },
             cls := "clear-completed",
             css("display") := clearCompletedDisplay$,
             "Clear completed"
@@ -99,8 +96,8 @@ class MainComponent(todoService: TodoService, router: Router) extends Component 
       )
     ).render
 
-  private def addTodo(e: KeyboardEvent): Unit = {
-    val addInput = e.target.asInstanceOf[Input]
+  private def addTodo(e: dom.KeyboardEvent): Unit = {
+    val addInput = e.target.asInstanceOf[html.Input]
     val newTodoName = addInput.value.trim
     if (newTodoName.nonEmpty) {
       val newTodo = Todo(newTodoName)

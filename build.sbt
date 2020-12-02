@@ -20,7 +20,7 @@ lazy val core = (project in file("core"))
     name := "rxtags",
     skip in publish := false,
     libraryDependencies ++= Seq(
-      "ba.sake" %%% "scalatags" % "0.9.2-rx2",
+      "ba.sake" %%% "scalatags" % "0.9.2-rx3.0",
       "com.outr" %%% "reactify" % "4.0.2"
     )
   )
@@ -38,7 +38,7 @@ lazy val todo = (project in file("todo"))
     scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
       "com.lihaoyi" %%% "upickle" % "1.2.0",
-      "ba.sake" %%% "scalajs-router" % "0.0.8"
+      "ba.sake" %%% "scalajs-router" % "0.0.9"
     )
   )
   .dependsOn(core)
