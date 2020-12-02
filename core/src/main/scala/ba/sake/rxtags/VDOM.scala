@@ -2,6 +2,8 @@ package ba.sake.rxtags
 
 import org.scalajs.dom
 import org.scalajs.dom.raw.Node
+import org.scalajs.dom.ext._
+import scalajs.js
 import scalatags.JsDom.all._
 
 /**
@@ -9,110 +11,88 @@ import scalatags.JsDom.all._
   */
 private[rxtags] object VDOM {
 
-  def updateElement(
-      parent: Node,
-      maybeNewFrag: Option[Frag],
-      maybeOldFrag: Option[Frag],
-      oldNodeIdx: Int,
-      seqFrag: Boolean
-  ): Int = {
-    //println("updateElement", oldNodeIdx, parent, "new", maybeNewFrag, "old", maybeOldFrag)
+  def getId(node: dom.Node): String =
+    node.asInstanceOf[js.Dynamic].scalaTag.id.toString
 
-    (maybeNewFrag, maybeOldFrag) match {
-      case (Some(newFrag), None) =>
-        val newElement = newFrag.render
-        //println(s"appending '${newElement.innerText}' at $oldNodeIdx to '${parent.innerText}'")
-        if (seqFrag) {
-          val referenceElement = parent.childNodes(oldNodeIdx)
-          parent.insertBefore(newElement, referenceElement)
-        } else {
-          parent.appendChild(newElement)
+  def update(
+      parent: dom.Node,
+      maybeOldFragId: Option[String],
+      maybeOldFrag: Option[Frag],
+      maybeNewFrag: Option[Frag]
+  ): Unit = {
+    //println("update", inSeqFrag, maybeOldFragId, parent, "old", maybeOldFrag, "new", maybeNewFrag)
+
+    (maybeOldFrag, maybeNewFrag) match {
+      case (None, Some(newFrag)) => // append
+        parent.appendChild(newFrag.render)
+      case (_, None) => // remove
+        val maybeExistingNode = parent.childNodes.toSeq.find { cn =>
+          getId(cn) == maybeOldFragId.get
         }
-      //println("appending done")
-      case (None, _) =>
-        //println(s"removing $oldNodeIdx")
-        val removeElement = parent.childNodes(oldNodeIdx)
-        parent.removeChild(removeElement)
-      //println(s"removing done $oldNodeIdx")
-      case (Some(newSF: SeqFrag[_]), Some(oldSF: SeqFrag[_])) => return updateElementsInSeqFrag(
+        maybeExistingNode.foreach(parent.removeChild)
+      case (Some(oldSF: SeqFrag[_]), Some(newSF: SeqFrag[_])) =>
+        updateSeqFrag(
+          maybeOldFragId.get,
           parent,
-          oldNodeIdx,
-          newSF.asInstanceOf[SeqFrag[Frag]],
-          oldSF.asInstanceOf[SeqFrag[Frag]]
+          oldSF.asInstanceOf[SeqFrag[Frag]],
+          newSF.asInstanceOf[SeqFrag[Frag]]
         )
-      case (Some(newSF: bindNode[_]), Some(oldSF: bindNode[_])) =>
+      case (Some(oldSF: bindNode[_]), Some(newSF: bindNode[_])) =>
         // these are already rendered DOM Elements
-        // TODO maybe do something smarter here..?
-        //println("Handling bindNode", newSF)
-        parent.replaceChild(
-          newSF.render,
-          parent.childNodes(oldNodeIdx)
-        )
-      //println("Done handling bindNode", newSF)
-      case (Some(newFrag), Some(oldFrag)) =>
-        if (didChange(newFrag, oldFrag)) {
-          //println(s"replaceChild $oldNodeIdx", newFrag, oldFrag)
-          parent.replaceChild(
-            newFrag.render,
-            parent.childNodes(oldNodeIdx)
-          )
-          //println(s"DONE replaceChild $oldNodeIdx", newFrag, oldFrag)
-        } else { // if not changed, check children also
-          // only "real" tags are diffable..
-          handleHtmlTag(
-            parent,
-            oldNodeIdx,
-            newFrag.asInstanceOf[HtmlTag],
-            oldFrag.asInstanceOf[HtmlTag]
-          )
+        parent.replaceChild(newSF.render, oldSF.render)
+      case (Some(oldFrag), Some(newFrag)) =>
+        val maybeExistingNode = parent.childNodes.toSeq.find { cn =>
+          getId(cn) == maybeOldFragId.get
+        }
+        maybeExistingNode match {
+          case None =>
+            println(s"Wooooooops, no node $maybeOldFragId", oldFrag, newFrag)
+          case Some(existingNode) =>
+            if (didChange(newFrag, oldFrag)) {
+              parent.replaceChild(newFrag.render, existingNode)
+            } else { // do the diffing
+              handleHtmlTag(
+                existingNode,
+                newFrag.asInstanceOf[HtmlTag],
+                oldFrag.asInstanceOf[HtmlTag]
+              )
+            }
         }
     }
-    //println("DONE updateElement", oldNodeIdx, parent, "new", maybeNewFrag, "old", maybeOldFrag)
-    1
+    // println("DONE update", inSeqFrag, maybeOldFragId, maybeNewFragId, parent, "old", maybeOldFrag, "new", maybeNewFrag)
   }
 
-  def updateElementsInSeqFrag(
+  def updateSeqFrag(
+      fragId: String,
       parent: Node,
-      oldNodeIdx: Int,
-      newSF: SeqFrag[Frag],
-      oldSF: SeqFrag[Frag]
-  ): Int = {
+      oldSF: SeqFrag[Frag],
+      newSF: SeqFrag[Frag]
+  ): Unit = {
 
-    val newChildrenFrags = newSF.xs.map(x => newSF.ev(x)).filterNot(isEmptyStringFrag)
     val oldChildrenFrags = oldSF.xs.map(x => oldSF.ev(x)).filterNot(isEmptyStringFrag)
+    val newChildrenFrags = newSF.xs.map(x => newSF.ev(x)).filterNot(isEmptyStringFrag)
 
-    //println("[SeqFrag] newChildrenFrags", newChildrenFrags)
-
-    var len = newChildrenFrags.length max oldChildrenFrags.length
+    val len = newChildrenFrags.length max oldChildrenFrags.length
     var i = 0
     while (i < len) {
-      val childCountBefore = parent.childNodes.length
-      //println("[SeqFrag] Before", i)
-      updateElement(
+      val oldChildFragId = oldChildrenFrags.lift(i).map(fr => getId(fr.render))
+      update(
         parent, // parent is same here!!
-        newChildrenFrags.lift(i),
+        oldChildFragId,
         oldChildrenFrags.lift(i),
-        i + oldNodeIdx,
-        true
+        newChildrenFrags.lift(i)
       )
-      //println("[SeqFrag] After", i)
-      val childCountAfter = parent.childNodes.length
-      if (childCountAfter < childCountBefore) {
-        // when child deleted do not increment i
-        len -= 1
-      } else {
-        i += 1
-      }
+      i += 1
     }
-    newChildrenFrags.length
   }
 
   private def handleHtmlTag(
-      parent: Node,
-      oldNodeIdx: Int,
+      existingNode: Node,
       newTag: HtmlTag,
       oldTag: HtmlTag
   ): Unit = {
+    // always update the ID, prepare for next diffing
+    existingNode.asInstanceOf[js.Dynamic].scalaTag.id = getId(newTag.render)
 
     //println("handleHtmlTag", parent, oldNodeIdx, newTag, oldTag)
 
@@ -126,12 +106,11 @@ private[rxtags] object VDOM {
       case other          => Seq(other)
     }.partition(_.isInstanceOf[AttrPair])
 
-    val oldNode = parent.childNodes(oldNodeIdx)
     var i = 0
 
     // handle attributes
     locally {
-      val oldElem = oldNode.asInstanceOf[dom.Element]
+      val oldElem = existingNode.asInstanceOf[dom.Element]
       oldAttrPairsMods.map(_.asInstanceOf[AttrPair]).foreach { ap =>
         oldElem.removeAttribute(ap.a.name)
         ScalatagsAddons.applyAttrAndProp(oldElem, ap.a.name, None)
@@ -149,12 +128,12 @@ private[rxtags] object VDOM {
       i = 0
       while (i < newChildrenFrags.length || i < oldChildrenFrags.length) {
         //println("Handling child ", i)
-        updateElement(
-          oldNode,
-          newChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
+        val maybeChildFragId = oldChildrenFrags.lift(i).map(_.asInstanceOf[Frag].render).map(getId)
+        update(
+          existingNode,
+          maybeChildFragId,
           oldChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
-          i,
-          false
+          newChildrenFrags.lift(i).map(_.asInstanceOf[Frag])
         )
         //println("DONE handling child ", i)
         i += 1
@@ -164,10 +143,10 @@ private[rxtags] object VDOM {
   }
 
   private def didChange(newFrag: Frag, oldFrag: Frag): Boolean =
-    if (newFrag.getClass != oldFrag.getClass) true
-    else (newFrag, oldFrag) match {
-      case (newFrag: HtmlTag, oldFrag: HtmlTag) => newFrag.tag != oldFrag.tag
-      case _                                    => true
+    (newFrag, oldFrag) match {
+      case (nf: HtmlTag, of: HtmlTag) =>
+        nf.tag != of.tag
+      case _ => true
     }
 
   private def isEmptyStringFrag(frag: Frag): Boolean =
@@ -175,4 +154,5 @@ private[rxtags] object VDOM {
       case sf: StringFrag => sf.v.trim.isEmpty
       case _              => false
     }
+
 }

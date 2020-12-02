@@ -12,6 +12,8 @@ trait Stateful[T] extends Reactive[T] {
   def now: T
 
   def attachAndFire(f: T => Unit): Unit
+
+  def map[R](f: T => R): Stateful[R]
 }
 
 // Val
@@ -29,7 +31,7 @@ final class Val[T] private (initValue: => T) extends Stateful[T] {
 
   override def attachAndFire(f: T => Unit): Unit = rx.attachAndFire(f)
 
-  def map[R](f: T => R): Val[R] = Val(f(now))
+  override def map[R](f: T => R): Val[R] = Val(f(now))
 }
 
 // Var
@@ -47,11 +49,11 @@ final class Var[T] private (initValue: => T) extends Stateful[T] {
 
   override def attachAndFire(f: T => Unit): Unit = rx.attachAndFire(f)
 
+  override def map[R](f: T => R): Var[R] = Var(f(now))
+
   def set(f: => T): Unit = rx.set(f)
 
   def set(f: T => T): Unit = rx.set(f(now))
-
-  def map[R](f: T => R): Var[R] = Var(f(now))
 }
 
 // Channel
