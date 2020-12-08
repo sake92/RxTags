@@ -10,15 +10,13 @@ object Ex5 extends Example {
   val ticker$ = Var(0)
 
   dom.window.setInterval(
-    () => {
-      println("tick")
-      ticker$.set(_ + 1)
-    },
+    () => { ticker$.set(_ + 1) },
     1000
   )
 
-  def content = ticker$.map { c =>
-    s"Ticker: $c"
-  }.asFrag
+  def content = div(
+    "Ticker: ",
+    ticker$.asFrag
+  )
 
 }

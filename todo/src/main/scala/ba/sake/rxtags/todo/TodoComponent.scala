@@ -10,62 +10,67 @@ case class TodoComponent(
     todo: Todo
 ) {
 
-  private val todo$ = Var(todo)
-  private val isEdit$ = Var(false)
-
-  todo$.attach { updated =>
-    todoService.update(updated)
-  }
-
-  private val editInput = input(
-    onblur := { () => stopEditing(true) },
-    onkeyup := { (e: dom.KeyboardEvent) =>
-      if (e.key == KeyValue.Enter) stopEditing(true)
-      else if (e.key == KeyValue.Escape) stopEditing(false)
-    },
-    value := todo.name,
-    cls := "edit"
-  ).render
-
   def render: Frag = {
-    val todoName$ = todo$.map(_.name).asFrag
-    val isChecked$ = Val { Option.when(todo$.now.completed)("checked") } // must use Option here !!!
-    val completedCls$ = Val { Option.when(todo$.now.completed)("completed") }
-    val editingCls$ = Val { Option.when(isEdit$.now)("editing") }
+    val isChecked = Option.when(todo.completed)("checked")
+    val completedCls = Option.when(todo.completed)("completed")
+    val editingCls = Option.when(todo.editing)("editing")
+    val doFocus = Option.when(todo.editing)(todo.name.length -> todo.name.length)
 
-    li(cls := editingCls$, cls := completedCls$)(
+    li(cls := editingCls, cls := completedCls)(
       div(cls := "view")(
         input(
-          onchange := { () => todo$.set(_.toggled) },
-          checked := isChecked$,
+          onchange := { (e: dom.Event) => toggle(e) },
+          checked := isChecked,
           cls := "toggle",
           tpe := "checkbox"
         ),
-        label(ondblclick := startEditing)(span(todoName$)),
+        label(
+          ondblclick := { () => startEditing() },
+          span(todo.name)
+        ),
         button(
           onclick := { () => todoService.remove(todo.id) },
           cls := "destroy"
         )
       ),
-      editInput
+      input(
+        doFocus.map(focus),
+        onblur := { (e: dom.Event) => stopEditing(e, true) },
+        onkeyup := { (e: dom.KeyboardEvent) =>
+          if (e.key == KeyValue.Enter) stopEditing(e, true)
+          else if (e.key == KeyValue.Escape) stopEditing(e, false)
+        },
+        value := todo.name,
+        cls := "edit"
+      )
     )
   }
 
-  private def startEditing = () => {
-    isEdit$.set(true)
-    editInput.focus()
-    editInput.selectionStart = editInput.value.length
+  private def toggle(e: dom.Event): Unit = {
+    val completed = e.target.asInstanceOf[dom.html.Input].checked
+    val updatedTodo = todo.copy(completed = completed)
+    todoService.update(updatedTodo)
+    println("TOGLEDDDDD", updatedTodo)
   }
 
-  private def stopEditing(doUpdate: Boolean): Unit = {
-    isEdit$.set(false)
-    editInput.value = editInput.value.trim
+  private def startEditing(): Unit = {
+    val updatedTodo = todo.startedEditing
+    todoService.update(updatedTodo)
+  }
+
+  private def stopEditing(e: dom.Event, doUpdate: Boolean): Unit = {
+    val editInput = e.target.asInstanceOf[dom.html.Input]
     if (doUpdate) {
-      val newValue = editInput.value
+      val newValue = editInput.value.trim
+      editInput.value = newValue
       if (newValue.isEmpty) todoService.remove(todo.id)
-      else todo$.set(_.copy(name = newValue))
+      else {
+        val updatedTodo = todo.finishedEditing.copy(name = newValue)
+        todoService.update(updatedTodo)
+      }
     } else { // when ESC is pressed, return to previous value
-      editInput.value = todo$.now.name
+      editInput.value = todo.name
+      editInput.blur()
     }
   }
 }

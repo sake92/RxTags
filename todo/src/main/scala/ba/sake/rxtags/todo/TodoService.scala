@@ -45,7 +45,7 @@ class TodoService {
     val savedTodosJson = dom.window.localStorage.getItem(TodosKey)
     val savedTodos =
       if (savedTodosJson == null) List.empty
-      else read[List[Todo]](savedTodosJson)
+      else read[List[Todo]](savedTodosJson).map(_.copy(editing = false))
 
     val initTodos$ = Var(savedTodos)
     initTodos$.attach { newValue =>
