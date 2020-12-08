@@ -13,8 +13,10 @@ case class TodoComponent(
   def render: Frag = {
     val isChecked = Option.when(todo.completed)("checked")
     val completedCls = Option.when(todo.completed)("completed")
-    val editingCls = Option.when(todo.editing)("editing")
-    val doFocus = Option.when(todo.editing)(todo.name.length -> todo.name.length)
+
+    val isEditing = todoService.editId$.now.map(_ == todo.id).getOrElse(false)
+    val editingCls = Option.when(isEditing)("editing")
+    val maybeFocus = Option.when(isEditing)(todo.name.length -> todo.name.length)
 
     li(cls := editingCls, cls := completedCls)(
       div(cls := "view")(
@@ -34,7 +36,7 @@ case class TodoComponent(
         )
       ),
       input(
-        doFocus.map(focus),
+        maybeFocus.map(focus),
         onblur := { (e: dom.Event) => stopEditing(e, true) },
         onkeyup := { (e: dom.KeyboardEvent) =>
           if (e.key == KeyValue.Enter) stopEditing(e, true)
@@ -50,12 +52,10 @@ case class TodoComponent(
     val completed = e.target.asInstanceOf[dom.html.Input].checked
     val updatedTodo = todo.copy(completed = completed)
     todoService.update(updatedTodo)
-    println("TOGLEDDDDD", updatedTodo)
   }
 
   private def startEditing(): Unit = {
-    val updatedTodo = todo.startedEditing
-    todoService.update(updatedTodo)
+    todoService.editId$.set(Option(todo.id))
   }
 
   private def stopEditing(e: dom.Event, doUpdate: Boolean): Unit = {
@@ -65,7 +65,7 @@ case class TodoComponent(
       editInput.value = newValue
       if (newValue.isEmpty) todoService.remove(todo.id)
       else {
-        val updatedTodo = todo.finishedEditing.copy(name = newValue)
+        val updatedTodo = todo.copy(name = newValue)
         todoService.update(updatedTodo)
       }
     } else { // when ESC is pressed, return to previous value

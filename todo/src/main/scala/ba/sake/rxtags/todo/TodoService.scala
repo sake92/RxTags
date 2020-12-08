@@ -8,7 +8,9 @@ class TodoService {
 
   val toggleAllState$ = Var(false)
 
-  val todos$ : Var[List[Todo]] = initTodos()
+  val editId$ = Var(Option.empty[UUID])
+
+  val todos$ = initTodos()
 
   todos$.attachAndFire { todos =>
     if (todos.length == 1) // synchronize with last element..
@@ -45,7 +47,7 @@ class TodoService {
     val savedTodosJson = dom.window.localStorage.getItem(TodosKey)
     val savedTodos =
       if (savedTodosJson == null) List.empty
-      else read[List[Todo]](savedTodosJson).map(_.copy(editing = false))
+      else read[List[Todo]](savedTodosJson)
 
     val initTodos$ = Var(savedTodos)
     initTodos$.attach { newValue =>
