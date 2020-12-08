@@ -1,9 +1,9 @@
 package ba.sake.rxtags
 
+import java.util.UUID
+
 import org.scalajs.dom
 import scalatags.JsDom.all._
-import scalatags.jsdom
-import scalajs.js
 
 private[rxtags] trait RxFrags {
 
@@ -16,38 +16,47 @@ private[rxtags] trait RxFrags {
     def asFrag: Frag = new RxFrag(rxFrag)
   }
 
+  implicit class StatefulNumericOps[T: Numeric](rxNum: Stateful[T]) {
+    private val rxFrag = rxNum.map(n => StringFrag(n.toString))
+    def asFrag: Frag = new RxFrag(rxFrag)
+  }
+
   implicit class StatefulSeqFragOps[CC <: Seq[Frag]](rxSeq: Stateful[CC]) {
     implicit val ev: Frag => Frag = identity
     private val rxFrag = rxSeq.map(s => SeqFrag(s))
-    def asFrag: Frag = new RxFrag(rxFrag, true)
+    def asFrag: Frag = new RxFrag(rxFrag)
+  }
+}
+
+private[rxtags] class RxFrag[T <: Frag](val rxFrag: Stateful[T]) extends Frag {
+
+  private var oldFrag: T = rxFrag.now
+  private val node: dom.Node = oldFrag.render
+  private var fragId: String = VDOM.getId(node)
+
+  private var parent: dom.Element = _
+
+  override def render: dom.Node = node
+
+  override def applyTo(newParent: dom.Element): Unit = {
+    parent = newParent
+    parent.appendChild(node)
+    rxFrag.attachAndFire { _ =>
+      update()
+    }
   }
 
-  class RxFrag[T <: Frag](rxFrag: Stateful[T], seqFrag: Boolean = false) extends jsdom.Frag {
+  def update(): Unit = {
+    val newFrag = rxFrag.now
+    VDOM.update(parent, Option(fragId), Option(oldFrag), Option(newFrag))
+    oldFrag = newFrag
 
-    private var oldFrag = rxFrag.now
-    private val node = oldFrag.render
-    private var fragId = VDOM.getId(node)
+    // always use new frag's ID, prepare for next DIFFing
+    fragId = VDOM.getId(newFrag.render)
+    VDOM.setId(node, fragId)
+  }
 
-    override def render: dom.Node = node
-
-    override def applyTo(parent: dom.Element): Unit = {
-      parent.appendChild(node)
-
-      rxFrag.attach { newFrag =>
-        // println("*" * 50)
-        // println("Update", fragId, seqFrag, oldFrag, newFrag)
-
-        VDOM.update(parent, Option(fragId), Option(oldFrag), Option(newFrag))
-
-        oldFrag = newFrag
-        // always use new frag's ID, prepare for next DIFFing
-        fragId = VDOM.getId(newFrag.render)
-        node.asInstanceOf[js.Dynamic].scalaTag.id = fragId
-      }
-    }
-
-    override def toString: String = {
-      "RxFrag(" + oldFrag.toString + ")"
-    }
+  override def toString: String = {
+    "RxFrag(" + oldFrag.toString + ")"
   }
 }

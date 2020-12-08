@@ -14,13 +14,16 @@ private[rxtags] object VDOM {
   def getId(node: dom.Node): String =
     node.asInstanceOf[js.Dynamic].scalaTag.id.toString
 
+  def setId(node: dom.Node, id: String): Unit =
+    node.asInstanceOf[js.Dynamic].scalaTag.id = id
+
   def update(
       parent: dom.Node,
-      maybeOldFragId: Option[String],
+      maybeOldFragId: Option[String], // TODO remove
       maybeOldFrag: Option[Frag],
       maybeNewFrag: Option[Frag]
   ): Unit = {
-    //println("update", inSeqFrag, maybeOldFragId, parent, "old", maybeOldFrag, "new", maybeNewFrag)
+    //  println("update", maybeOldFragId, parent, getId(parent), "old", maybeOldFrag, "new", maybeNewFrag)
 
     (maybeOldFrag, maybeNewFrag) match {
       case (None, Some(newFrag)) => // append
@@ -32,7 +35,6 @@ private[rxtags] object VDOM {
         maybeExistingNode.foreach(parent.removeChild)
       case (Some(oldSF: SeqFrag[_]), Some(newSF: SeqFrag[_])) =>
         updateSeqFrag(
-          maybeOldFragId.get,
           parent,
           oldSF.asInstanceOf[SeqFrag[Frag]],
           newSF.asInstanceOf[SeqFrag[Frag]]
@@ -40,6 +42,8 @@ private[rxtags] object VDOM {
       case (Some(oldSF: bindNode[_]), Some(newSF: bindNode[_])) =>
         // these are already rendered DOM Elements
         parent.replaceChild(newSF.render, oldSF.render)
+      case (Some(oldRxFrag: RxFrag[Frag]), Some(newRxFrag: RxFrag[Frag])) =>
+        oldRxFrag.update()
       case (Some(oldFrag), Some(newFrag)) =>
         val maybeExistingNode = parent.childNodes.toSeq.find { cn =>
           getId(cn) == maybeOldFragId.get
@@ -48,13 +52,16 @@ private[rxtags] object VDOM {
           case None =>
             println(s"Wooooooops, no node $maybeOldFragId", oldFrag, newFrag)
           case Some(existingNode) =>
-            if (didChange(newFrag, oldFrag)) {
+            val (didChg, fragType) = didChange(newFrag, oldFrag)
+            if (didChg) {
               parent.replaceChild(newFrag.render, existingNode)
+            } else if (fragType == "StringFrag") {
+              setId(existingNode, getId(newFrag.render))
             } else { // do the diffing
               handleHtmlTag(
-                existingNode,
-                newFrag.asInstanceOf[HtmlTag],
-                oldFrag.asInstanceOf[HtmlTag]
+                existingNode.asInstanceOf[dom.Element],
+                oldFrag.asInstanceOf[HtmlTag],
+                newFrag.asInstanceOf[HtmlTag]
               )
             }
         }
@@ -63,7 +70,6 @@ private[rxtags] object VDOM {
   }
 
   def updateSeqFrag(
-      fragId: String,
       parent: Node,
       oldSF: SeqFrag[Frag],
       newSF: SeqFrag[Frag]
@@ -85,42 +91,62 @@ private[rxtags] object VDOM {
       i += 1
     }
   }
-
   private def handleHtmlTag(
-      existingNode: Node,
-      newTag: HtmlTag,
-      oldTag: HtmlTag
+      existingElement: dom.Element,
+      oldTag: HtmlTag,
+      newTag: HtmlTag
   ): Unit = {
+    //println("handleHtmlTag", existingElement, newTag, oldTag)
+
     // always update the ID, prepare for next diffing
-    existingNode.asInstanceOf[js.Dynamic].scalaTag.id = getId(newTag.render)
+    setId(existingElement, getId(newTag.render))
 
-    //println("handleHtmlTag", parent, oldNodeIdx, newTag, oldTag)
-
-    val (newAttrPairMods, newChildrenFrags) = newTag.modifiers.flatten.flatMap {
+    val oldMods = oldTag.modifiers.flatten.flatMap {
       case sn: SeqNode[_] => sn.xs.map(x => sn.ev(x))
       case other          => Seq(other)
-    }.partition(_.isInstanceOf[AttrPair])
+    }
+    val oldChildrenFrags = oldMods.filter(_.isInstanceOf[Frag]).map(_.asInstanceOf[Frag])
+    val oldAttrPairs = oldMods.filter(_.isInstanceOf[AttrPair]).map(_.asInstanceOf[AttrPair])
+    val oldDirectives = oldMods.filter(_.isInstanceOf[Directive]).map(_.asInstanceOf[Directive])
 
-    val (oldAttrPairsMods, oldChildrenFrags) = oldTag.modifiers.flatten.flatMap {
+    val newMods = newTag.modifiers.flatten.flatMap {
       case sn: SeqNode[_] => sn.xs.map(x => sn.ev(x))
       case other          => Seq(other)
-    }.partition(_.isInstanceOf[AttrPair])
+    }
+    val newChildrenFrags = newMods.filter(_.isInstanceOf[Frag]).map(_.asInstanceOf[Frag])
+    val newAttrPairs = newMods.filter(_.isInstanceOf[AttrPair]).map(_.asInstanceOf[AttrPair])
+    val newDirectives = newMods.filter(_.isInstanceOf[Directive]).map(_.asInstanceOf[Directive])
 
     var i = 0
 
+    // TODO kopirat OLD vrijednosti RxAttrValue u NEW ???
+
     // handle attributes
     locally {
-      val oldElem = existingNode.asInstanceOf[dom.Element]
-      oldAttrPairsMods.map(_.asInstanceOf[AttrPair]).foreach { ap =>
-        oldElem.removeAttribute(ap.a.name)
-        ScalatagsAddons.applyAttrAndProp(oldElem, ap.a.name, None)
+      val newAttrNames = newAttrPairs.map(_.a.name).toSet
+      oldAttrPairs.foreach { ap =>
+        if (ap.ev.isInstanceOf[RxAttrValue[_, _]]) {
+          //ap.ev.asInstanceOf[RxAttrValue[_, _]].active = false
+          /*if (ap.a.name == "class") { // cleanup old classes...
+            ap.ev.asInstanceOf[RxAttrValue[_, _]].handleClass("", existingElement)
+          }*/
+        }
+        ScalatagsAddons.applyAttrAndProp(existingElement, ap.a.name, None)
+        existingElement.removeAttribute(ap.a.name)
       }
-      newAttrPairMods.map(_.asInstanceOf[AttrPair]).foreach { ap =>
-        ap.applyTo(oldElem)
-        ScalatagsAddons.applyAttrAndProp(oldElem, ap.a.name, ap.v)
+
+      existingElement.removeAttribute("class")
+
+      newAttrPairs.foreach { ap =>
+        ap.applyTo(existingElement)
+        ScalatagsAddons.applyAttrAndProp(existingElement, ap.a.name, ap.v)
       }
     }
-    //println("handleHtmlTag done attrs", parent, oldNodeIdx, newTag, oldTag)
+
+    // handle directives
+    locally {
+      newDirectives.foreach(_.applyTo(existingElement))
+    }
 
     // handle children
     locally {
@@ -128,25 +154,28 @@ private[rxtags] object VDOM {
       i = 0
       while (i < newChildrenFrags.length || i < oldChildrenFrags.length) {
         //println("Handling child ", i)
-        val maybeChildFragId = oldChildrenFrags.lift(i).map(_.asInstanceOf[Frag].render).map(getId)
+        val maybeChildFragId = oldChildrenFrags.lift(i).map(_.render).map(getId)
         update(
-          existingNode,
+          existingElement,
           maybeChildFragId,
-          oldChildrenFrags.lift(i).map(_.asInstanceOf[Frag]),
-          newChildrenFrags.lift(i).map(_.asInstanceOf[Frag])
+          oldChildrenFrags.lift(i),
+          newChildrenFrags.lift(i)
         )
         //println("DONE handling child ", i)
         i += 1
       }
     }
+
     //println("DONE handleHtmlTag", parent, oldNodeIdx, newTag, oldTag)
   }
 
-  private def didChange(newFrag: Frag, oldFrag: Frag): Boolean =
+  private def didChange(newFrag: Frag, oldFrag: Frag): (Boolean, String) =
     (newFrag, oldFrag) match {
       case (nf: HtmlTag, of: HtmlTag) =>
-        nf.tag != of.tag
-      case _ => true
+        (nf.tag != of.tag) -> ""
+      case (nf: StringFrag, of: StringFrag) =>
+        (nf.v != of.v) -> "StringFrag"
+      case _ => true -> ""
     }
 
   private def isEmptyStringFrag(frag: Frag): Boolean =
