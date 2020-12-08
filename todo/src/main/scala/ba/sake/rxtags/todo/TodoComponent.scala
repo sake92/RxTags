@@ -59,7 +59,6 @@ case class TodoComponent(
   }
 
   private def stopEditing(e: dom.Event, doUpdate: Boolean): Unit = {
-    todoService.editId$.set(None)
     val editInput = e.target.asInstanceOf[dom.html.Input]
     if (doUpdate) {
       val newValue = editInput.value.trim
@@ -73,5 +72,6 @@ case class TodoComponent(
       editInput.value = todo.name
       editInput.blur()
     }
+    todoService.editId$.set(None)
   }
 }
