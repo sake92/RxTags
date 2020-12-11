@@ -60,20 +60,23 @@ class MainComponent(todoService: TodoService, router: Router) extends Component 
             li(
               a(
                 onclick := { () => router.navigateTo("/") },
-                cls := selectedCls(TodoFilter.All)
-              )("All")
+                cls := selectedCls(TodoFilter.All),
+                "All"
+              )
             ),
             li(
               a(
                 onclick := { () => router.navigateTo("/active") },
-                cls := selectedCls(TodoFilter.Active)
-              )("Active")
+                cls := selectedCls(TodoFilter.Active),
+                "Active"
+              )
             ),
             li(
               a(
                 onclick := { () => router.navigateTo("/completed") },
-                cls := selectedCls(TodoFilter.Completed)
-              )("Completed")
+                cls := selectedCls(TodoFilter.Completed),
+                "Completed"
+              )
             )
           ),
           button(
@@ -86,8 +89,8 @@ class MainComponent(todoService: TodoService, router: Router) extends Component 
       ),
       footer(cls := "info")(
         p("Double-click to edit a todo"),
-        p("Created by ", a(href := "https://sake.ba")("Sakib Hadžiavdić")),
-        p("Part of ", a(href := "http://todomvc.com")("TodoMVC"))
+        p("Created by ", a(href := "https://sake.ba", "Sakib Hadžiavdić")),
+        p("Part of ", a(href := "http://todomvc.com", "TodoMVC"))
       )
     ).render
 
