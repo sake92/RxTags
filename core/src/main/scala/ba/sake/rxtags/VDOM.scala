@@ -17,20 +17,23 @@ private[rxtags] object VDOM {
   def setId(node: dom.Node, id: String): Unit =
     node.asInstanceOf[js.Dynamic].scalaTag.id = id
 
+  def hasId(node: dom.Node): Boolean =
+    !js.isUndefined(node.asInstanceOf[js.Dynamic].scalaTag)
+
   def update(
       parent: dom.Node,
-      maybeOldFragId: Option[String], // TODO remove
       maybeOldFrag: Option[Frag],
       maybeNewFrag: Option[Frag]
   ): Unit = {
     //  println("update", maybeOldFragId, parent, getId(parent), "old", maybeOldFrag, "new", maybeNewFrag)
+    val maybeOldFragId = maybeOldFrag.map(fr => getId(fr.render))
 
     (maybeOldFrag, maybeNewFrag) match {
       case (None, Some(newFrag)) => // append
         parent.appendChild(newFrag.render)
       case (_, None) => // remove
         val maybeExistingNode = parent.childNodes.toSeq.find { cn =>
-          getId(cn) == maybeOldFragId.get
+          hasId(cn) && getId(cn) == maybeOldFragId.get
         }
         maybeExistingNode.foreach(parent.removeChild)
       case (Some(oldSF: SeqFrag[_]), Some(newSF: SeqFrag[_])) =>
@@ -46,7 +49,7 @@ private[rxtags] object VDOM {
         oldRxFrag.update()
       case (Some(oldFrag), Some(newFrag)) =>
         val maybeExistingNode = parent.childNodes.toSeq.find { cn =>
-          getId(cn) == maybeOldFragId.get
+          hasId(cn) && getId(cn) == maybeOldFragId.get
         }
         maybeExistingNode match {
           case None =>
@@ -81,10 +84,8 @@ private[rxtags] object VDOM {
     val len = newChildrenFrags.length max oldChildrenFrags.length
     var i = 0
     while (i < len) {
-      val oldChildFragId = oldChildrenFrags.lift(i).map(fr => getId(fr.render))
       update(
         parent, // parent is same here!!
-        oldChildFragId,
         oldChildrenFrags.lift(i),
         newChildrenFrags.lift(i)
       )
@@ -123,14 +124,7 @@ private[rxtags] object VDOM {
 
     // handle attributes
     locally {
-      val newAttrNames = newAttrPairs.map(_.a.name).toSet
       oldAttrPairs.foreach { ap =>
-        if (ap.ev.isInstanceOf[RxAttrValue[_, _]]) {
-          //ap.ev.asInstanceOf[RxAttrValue[_, _]].active = false
-          /*if (ap.a.name == "class") { // cleanup old classes...
-            ap.ev.asInstanceOf[RxAttrValue[_, _]].handleClass("", existingElement)
-          }*/
-        }
         ScalatagsAddons.applyAttrAndProp(existingElement, ap.a.name, None)
         existingElement.removeAttribute(ap.a.name)
       }
@@ -154,10 +148,8 @@ private[rxtags] object VDOM {
       i = 0
       while (i < newChildrenFrags.length || i < oldChildrenFrags.length) {
         //println("Handling child ", i)
-        val maybeChildFragId = oldChildrenFrags.lift(i).map(_.render).map(getId)
         update(
           existingElement,
-          maybeChildFragId,
           oldChildrenFrags.lift(i),
           newChildrenFrags.lift(i)
         )

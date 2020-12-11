@@ -30,7 +30,6 @@ private[rxtags] class RxFrag[T <: Frag](val rxFrag: Stateful[T]) extends Frag {
 
   private var oldFrag: T = rxFrag.now
   private val node: dom.Node = oldFrag.render
-  private var fragId: String = VDOM.getId(node)
 
   private var parent: dom.Element = _
 
@@ -46,12 +45,12 @@ private[rxtags] class RxFrag[T <: Frag](val rxFrag: Stateful[T]) extends Frag {
 
   def update(): Unit = {
     val newFrag = rxFrag.now
-    VDOM.update(parent, Option(fragId), Option(oldFrag), Option(newFrag))
+    VDOM.update(parent, Option(oldFrag), Option(newFrag))
     oldFrag = newFrag
 
     // always use new frag's ID, prepare for next DIFFing
-    fragId = VDOM.getId(newFrag.render)
-    VDOM.setId(node, fragId)
+    val newFragId = VDOM.getId(newFrag.render)
+    VDOM.setId(node, newFragId)
   }
 
   override def toString: String = {
