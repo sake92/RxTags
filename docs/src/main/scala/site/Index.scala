@@ -8,7 +8,21 @@ object Index extends templates.RxTagsBlogPage {
   override def pageSettings =
     super.pageSettings.withTitle("Introduction")
 
-  override def blogSettings = super.blogSettings.withSections(basicsSection)
+  override def blogSettings = super.blogSettings.withSections(quickStartSection, basicsSection)
+
+  val quickStartSection = Section(
+    "Quick Start",
+    div(
+      s"""
+      You can use this [starter repo](https://github.com/sake92/RxTags-Starter)
+      to get you up and running!  
+      Just clone it and then:
+      - run `sbt`
+      - run `client/fastOptJS` in it
+      - open `client/index.html`
+      """.md
+    )
+  )
 
   val basicsSection = Section(
     "Basics",

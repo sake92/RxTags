@@ -41,13 +41,12 @@ object View extends templates.RxTagsBlogPage {
       b("Result:"),
       Panel.panel(Panel.Companion.Type.Default, div(id := "ex5")),
       """
-      At line <mark>1</mark> we declare a reactive variable, `Var[Int]` with an initial value of `0`.  
+      1. At line <mark>1</mark> we declare a reactive variable, `Var[Int]` with initial value of `0`.  
+      1. Next, at line <mark>4</mark> we increment it, every second.  
+      1. Finally, at line <mark>10</mark> we render it to HTML.  
       
-      Next, at line <mark>4</mark> we increment it, every second.  
-      
-      Finally, at line <mark>10</mark> we render it to HTML.  
-      Any `Var[Frag]` can be put just as ordinary ScalaTags! :)  
-      There are also handy implicit conversions for `Var[String]`, `Var[Int]` (in example above) and similar.
+      > Any `Var[Frag]` can be put just as ordinary ScalaTags! :)  
+      > There are also handy implicit conversions for `Var[String]`, `Var[Int]` (in example above) and similar.
       
       ---
       Here is another example, using an event handler:
