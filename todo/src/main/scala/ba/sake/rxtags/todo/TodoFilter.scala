@@ -5,7 +5,7 @@ trait TodoFilter {
 }
 
 object TodoFilter {
-  val All: TodoFilter = todo => true
+  val All: TodoFilter = _ => true
   val Completed: TodoFilter = todo => todo.completed
   val Active: TodoFilter = todo => !todo.completed
 }

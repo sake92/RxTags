@@ -13,9 +13,8 @@ object Ex3 extends Example {
     "Please enter your name: ",
     input(onkeyup := updateName),
     br,
-    name$.map { name =>
-      s"Your name: $name"
-    }.asFrag
+    "Your name: ",
+    name$
   )
 
   def updateName: (dom.KeyboardEvent => Unit) =

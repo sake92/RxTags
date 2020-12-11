@@ -6,11 +6,10 @@ import ba.sake.rxtags._
 
 class TodoService {
 
-  val toggleAllState$ = Var(false)
-
-  val editId$ = Var(Option.empty[UUID])
-
   val todos$ = initTodos()
+  val filter$ = Var(TodoFilter.All)
+  val toggleAllState$ = Var(false)
+  val editId$ = Var(Option.empty[UUID])
 
   todos$.attachAndFire { todos =>
     if (todos.length == 1) // synchronize with last element..

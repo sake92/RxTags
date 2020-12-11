@@ -4,18 +4,15 @@ import org.scalajs.dom
 import org.scalajs.dom.ext.KeyValue
 import org.scalajs.dom.html
 import scalatags.JsDom.all._
-import scalatags.JsDom.tags2.section
 import ba.sake.scalajs_router._
 import ba.sake.rxtags._
 
 class MainComponent(todoService: TodoService, router: Router) extends Component {
 
-  val todoFilter$ = Var(TodoFilter.All)
-
   private val todos$ = todoService.todos$
 
   private val todosFiltered$ = todos$.map {
-    todos => todos.filter(todoFilter$.now.isValid)
+    todos => todos.filter(todoService.filter$.now.isValid)
   }
 
   private val mainDisplay$ = todos$.map(todos => if (todos.isEmpty) "none" else "block")
@@ -46,11 +43,9 @@ class MainComponent(todoService: TodoService, router: Router) extends Component 
           ),
           label(`for` := "toggle-all", "Mark all as complete"),
           ul(cls := "todo-list")(
-            todosFiltered$.map { tf =>
-              tf.map { t =>
-                TodoComponent(todoService, t).render
-              }
-            }.asFrag
+            todosFiltered$.map2 { t =>
+              TodoComponent(todoService, t).render
+            }
           )
         ),
         footer(cls := "footer", css("display") := mainDisplay$)(
@@ -59,7 +54,7 @@ class MainComponent(todoService: TodoService, router: Router) extends Component 
               val count = todos.count(!_.completed)
               val itemsLabel = if (count == 1) "item" else "items"
               frag(strong(count), s" $itemsLabel left")
-            }.asFrag
+            }
           ),
           ul(cls := "filters")(
             li(
@@ -107,7 +102,7 @@ class MainComponent(todoService: TodoService, router: Router) extends Component 
   }
 
   private def selectedCls(filter: TodoFilter) =
-    todoFilter$.map { tf =>
+    todoService.filter$.map { tf =>
       Option.when(tf == filter)("selected")
     }
 }

@@ -10,18 +10,15 @@ object Main {
     val todoService = new TodoService
     val mainComponent = new MainComponent(todoService, router)
 
-    val routes: Router.Routes = {
-      case "/active" =>
-        mainComponent.todoFilter$.set(TodoFilter.Active)
-        mainComponent
-      case "/completed" =>
-        mainComponent.todoFilter$.set(TodoFilter.Completed)
-        mainComponent
-      case _ =>
-        mainComponent.todoFilter$.set(TodoFilter.All)
-        mainComponent
+    // always return MainComponent
+    val routes: Router.Routes = _ => mainComponent
+
+    val listener: Router.Listener = {
+      case "/active"    => todoService.filter$.set(TodoFilter.Active)
+      case "/completed" => todoService.filter$.set(TodoFilter.Completed)
+      case _            => todoService.filter$.set(TodoFilter.All)
     }
 
-    router.withRoutesData("main", routes).init()
+    router.withRoutesData("main", routes).withListener(listener).init()
   }
 }

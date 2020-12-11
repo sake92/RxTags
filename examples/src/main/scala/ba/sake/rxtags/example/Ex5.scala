@@ -16,7 +16,7 @@ object Ex5 extends Example {
 
   def content = div(
     "Ticker: ",
-    ticker$.asFrag
+    ticker$
   )
 
 }

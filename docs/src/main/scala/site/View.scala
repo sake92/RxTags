@@ -23,7 +23,7 @@ object View extends templates.RxTagsBlogPage {
       
       Here is an example of a ticker, it counts the number of seconds passed:
       """.md,
-      chl.scala.withLineHighlight("1,4,8")(
+      chl.scala.withLineHighlight("1,4,10")(
         """
         val ticker$ = Var(0)
 
@@ -32,9 +32,10 @@ object View extends templates.RxTagsBlogPage {
           1000
         )
       
-        def content = ticker$.map { c =>
-          s"Ticker: $c"
-        }.asFrag
+        def content = div(
+          "Ticker: ",
+          ticker$
+        )
       """
       ),
       b("Result:"),
@@ -44,10 +45,9 @@ object View extends templates.RxTagsBlogPage {
       
       Next, at line <mark>4</mark> we increment it, every second.  
       
-      Finally, at line <mark>8</mark> we `map` it to HTML.  
-      When we `map` a `Var[T]` to a `Var[Frag]`,
-      ScalaTags doesn't know how to render it to DOM.  
-      That's why we need to call `asFrag` on it.
+      Finally, at line <mark>10</mark> we render it to HTML.  
+      Any `Var[Frag]` can be put just as ordinary ScalaTags! :)  
+      There are also handy implicit conversions for `Var[String]`, `Var[Int]` (in example above) and similar.
       
       ---
       Here is another example, using an event handler:
@@ -60,9 +60,8 @@ object View extends templates.RxTagsBlogPage {
           "Please enter your name: ",
           input(onkeyup := updateName),
           br,
-          name$.map { name =>
-            s"Your name: $name"
-          }.asFrag
+          "Your name: ",
+          name$
         )
       
         def updateName: (dom.KeyboardEvent => Unit) =

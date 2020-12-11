@@ -1,30 +1,28 @@
 package ba.sake.rxtags
 
-import java.util.UUID
-
+import scala.language.implicitConversions
 import org.scalajs.dom
 import scalatags.JsDom.all._
 
 private[rxtags] trait RxFrags {
 
-  implicit class StatefulFragOps[T <: Frag](rxFrag: Stateful[T]) {
-    def asFrag: Frag = new RxFrag(rxFrag)
+  implicit def statefulRxFrag[T <: Frag](rxFrag: Stateful[T]): Frag =
+    new RxFrag(rxFrag)
+
+  implicit def statefulRxString(rxString: Stateful[String]): Frag = {
+    val rxFrag = rxString.map(StringFrag)
+    new RxFrag(rxFrag)
   }
 
-  implicit class StatefulStringOps[T](rxString: Stateful[String]) {
-    private val rxFrag = rxString.map(StringFrag)
-    def asFrag: Frag = new RxFrag(rxFrag)
+  implicit def statefulRxNumeric[T: Numeric](rxNum: Stateful[T]): Frag = {
+    val rxFrag = rxNum.map(n => StringFrag(n.toString))
+    new RxFrag(rxFrag)
   }
 
-  implicit class StatefulNumericOps[T: Numeric](rxNum: Stateful[T]) {
-    private val rxFrag = rxNum.map(n => StringFrag(n.toString))
-    def asFrag: Frag = new RxFrag(rxFrag)
-  }
-
-  implicit class StatefulSeqFragOps[CC <: Seq[Frag]](rxSeq: Stateful[CC]) {
+  implicit def statefulRxSeq[CC <: Seq[Frag]](rxSeq: Stateful[CC]): Frag = {
     implicit val ev: Frag => Frag = identity
-    private val rxFrag = rxSeq.map(s => SeqFrag(s))
-    def asFrag: Frag = new RxFrag(rxFrag)
+    val rxFrag = rxSeq.map(s => SeqFrag(s))
+    new RxFrag(rxFrag)
   }
 }
 

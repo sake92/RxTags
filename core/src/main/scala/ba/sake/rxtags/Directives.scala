@@ -18,6 +18,7 @@ trait Directives {
 
   case class focus(range: (Int, Int)) extends Directive {
     private val (start, end) = range
+
     def execute(elem: dom.Element): Unit = {
       val inputElem = elem.asInstanceOf[dom.html.Input]
       inputElem.focus()

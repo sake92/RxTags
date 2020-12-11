@@ -14,20 +14,18 @@ object Ex6 extends Example {
       CartItem(10, "eggs"),
       CartItem(1, "milk"),
       CartItem(3, "bananas"),
-      CartItem(2, "icecreams")
+      CartItem(2, "ice creams")
     )
   )
 
   def content = ul(
-    cartItems$.map { items =>
-      items.map { item =>
-        li(
-          b(item.count),
-          s" ${item.name} ",
-          button(onclick := delete(item))("Delete")
-        )
-      }
-    }.asFrag
+    cartItems$.map2 { item =>
+      li(
+        b(item.count),
+        s" ${item.name} ",
+        button(onclick := delete(item))("Delete")
+      )
+    }
   )
 
   def delete(item: CartItem): (dom.Event => Unit) =

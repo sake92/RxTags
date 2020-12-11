@@ -1,13 +1,13 @@
 package ba.sake.rxtags
 
-trait Reactive[T] {
+trait Reactive[+T] {
 
   def attach(f: T => Unit): Unit
 
   def on(f: => Unit): Unit = attach(_ => f)
 }
 
-trait Stateful[T] extends Reactive[T] {
+trait Stateful[+T] extends Reactive[T] {
 
   def now: T
 
