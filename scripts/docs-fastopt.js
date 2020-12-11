@@ -1404,33 +1404,10 @@ var $p_Lba_sake_rxtags_VDOM$__handleHtmlTag__Lorg_scalajs_dom_raw_Element__Lscal
     newDirectives = h$13
   };
   var i = 0;
-  var f$12 = ((this$15$1) => ((x$14$2) => {
-    var x$14 = $as_Lscalatags_generic_AttrPair(x$14$2);
-    return x$14.Lscalatags_generic_AttrPair__f_a.Lscalatags_generic_Attr__f_name
-  }))($thiz);
-  var this$17;
-  if ((newAttrPairs === $m_sci_Nil$())) {
-    this$17 = $m_sci_Nil$()
-  } else {
-    var arg1$14 = newAttrPairs.head__O();
-    var h$14 = new $c_sci_$colon$colon(f$12(arg1$14), $m_sci_Nil$());
-    var t$14 = h$14;
-    var rest$8 = $as_sci_List(newAttrPairs.tail__O());
-    while ((rest$8 !== $m_sci_Nil$())) {
-      var arg1$15 = rest$8.head__O();
-      var nx$8 = new $c_sci_$colon$colon(f$12(arg1$15), $m_sci_Nil$());
-      t$14.sci_$colon$colon__f_next = nx$8;
-      t$14 = nx$8;
-      rest$8 = $as_sci_List(rest$8.tail__O())
-    };
-    this$17 = h$14
-  };
-  $m_sci_Set$().from__sc_IterableOnce__sci_Set(this$17);
   var these = oldAttrPairs;
   while ((!these.isEmpty__Z())) {
-    var arg1$16 = these.head__O();
-    var ap = $as_Lscalatags_generic_AttrPair(arg1$16);
-    false;
+    var arg1$14 = these.head__O();
+    var ap = $as_Lscalatags_generic_AttrPair(arg1$14);
     $m_Lba_sake_rxtags_ScalatagsAddons$().applyAttrAndProp__Lorg_scalajs_dom_raw_Element__T__O__V(existingElement, ap.Lscalatags_generic_AttrPair__f_a.Lscalatags_generic_Attr__f_name, $m_s_None$());
     existingElement.removeAttribute(ap.Lscalatags_generic_AttrPair__f_a.Lscalatags_generic_Attr__f_name);
     these = $as_sci_List(these.tail__O())
@@ -1438,48 +1415,30 @@ var $p_Lba_sake_rxtags_VDOM$__handleHtmlTag__Lorg_scalajs_dom_raw_Element__Lscal
   existingElement.removeAttribute("class");
   var these$1 = newAttrPairs;
   while ((!these$1.isEmpty__Z())) {
-    var arg1$17 = these$1.head__O();
-    var ap$3 = $as_Lscalatags_generic_AttrPair(arg1$17);
-    var this$18 = ap$3.Lscalatags_generic_AttrPair__f_ev;
+    var arg1$15 = these$1.head__O();
+    var ap$3 = $as_Lscalatags_generic_AttrPair(arg1$15);
+    var this$17 = ap$3.Lscalatags_generic_AttrPair__f_ev;
     var a = ap$3.Lscalatags_generic_AttrPair__f_a;
     var v = ap$3.Lscalatags_generic_AttrPair__f_v;
-    this$18.apply__Lorg_scalajs_dom_raw_Element__Lscalatags_generic_Attr__O__V(existingElement, a, v);
+    this$17.apply__Lorg_scalajs_dom_raw_Element__Lscalatags_generic_Attr__O__V(existingElement, a, v);
     $m_Lba_sake_rxtags_ScalatagsAddons$().applyAttrAndProp__Lorg_scalajs_dom_raw_Element__T__O__V(existingElement, ap$3.Lscalatags_generic_AttrPair__f_a.Lscalatags_generic_Attr__f_name, ap$3.Lscalatags_generic_AttrPair__f_v);
     these$1 = $as_sci_List(these$1.tail__O())
   };
   var these$2 = newDirectives;
   while ((!these$2.isEmpty__Z())) {
-    var arg1$18 = these$2.head__O();
-    var x$15$1 = $as_Lba_sake_rxtags_Directive(arg1$18);
-    x$15$1.applyTo__Lorg_scalajs_dom_raw_Element__V(existingElement);
+    var arg1$16 = these$2.head__O();
+    var x$14$1 = $as_Lba_sake_rxtags_Directive(arg1$16);
+    x$14$1.applyTo__Lorg_scalajs_dom_raw_Element__V(existingElement);
     these$2 = $as_sci_List(these$2.tail__O())
   };
   i = 0;
   while (((i < newChildrenFrags.length__I()) || (i < oldChildrenFrags.length__I()))) {
-    var this$21 = new $c_s_PartialFunction$Lifted(oldChildrenFrags);
+    var this$20 = new $c_s_PartialFunction$Lifted(oldChildrenFrags);
     var v1 = i;
-    var this$22 = this$21.apply__O__s_Option(v1);
-    var this$23;
-    if (this$22.isEmpty__Z()) {
-      this$23 = $m_s_None$()
-    } else {
-      var arg1$19 = this$22.get__O();
-      var x$16$1 = $as_Lscalatags_generic_Frag(arg1$19);
-      this$23 = new $c_s_Some(x$16$1.render__O())
-    };
-    var maybeChildFragId;
-    if (this$23.isEmpty__Z()) {
-      maybeChildFragId = $m_s_None$()
-    } else {
-      var arg1$20 = this$23.get__O();
-      maybeChildFragId = new $c_s_Some($m_Lba_sake_rxtags_VDOM$().getId__Lorg_scalajs_dom_raw_Node__T(arg1$20))
-    };
-    var this$24 = new $c_s_PartialFunction$Lifted(oldChildrenFrags);
+    var $$x5 = this$20.apply__O__s_Option(v1);
+    var this$21 = new $c_s_PartialFunction$Lifted(newChildrenFrags);
     var v1$1 = i;
-    var $$x5 = this$24.apply__O__s_Option(v1$1);
-    var this$25 = new $c_s_PartialFunction$Lifted(newChildrenFrags);
-    var v1$2 = i;
-    $thiz.update__Lorg_scalajs_dom_raw_Node__s_Option__s_Option__s_Option__V(existingElement, maybeChildFragId, $$x5, this$25.apply__O__s_Option(v1$2));
+    $thiz.update__Lorg_scalajs_dom_raw_Node__s_Option__s_Option__V(existingElement, $$x5, this$21.apply__O__s_Option(v1$1));
     i = ((1 + i) | 0)
   }
 });
@@ -1528,7 +1487,19 @@ $c_Lba_sake_rxtags_VDOM$.prototype.getId__Lorg_scalajs_dom_raw_Node__T = (functi
 $c_Lba_sake_rxtags_VDOM$.prototype.setId__Lorg_scalajs_dom_raw_Node__T__V = (function(node, id) {
   node.scalaTag.id = id
 });
-$c_Lba_sake_rxtags_VDOM$.prototype.update__Lorg_scalajs_dom_raw_Node__s_Option__s_Option__s_Option__V = (function(parent, maybeOldFragId, maybeOldFrag, maybeNewFrag) {
+$c_Lba_sake_rxtags_VDOM$.prototype.hasId__Lorg_scalajs_dom_raw_Node__Z = (function(node) {
+  var v = node.scalaTag;
+  return (!(v === (void 0)))
+});
+$c_Lba_sake_rxtags_VDOM$.prototype.update__Lorg_scalajs_dom_raw_Node__s_Option__s_Option__V = (function(parent, maybeOldFrag, maybeNewFrag) {
+  var maybeOldFragId;
+  if (maybeOldFrag.isEmpty__Z()) {
+    maybeOldFragId = $m_s_None$()
+  } else {
+    var arg1 = maybeOldFrag.get__O();
+    var fr = $as_Lscalatags_generic_Frag(arg1);
+    maybeOldFragId = new $c_s_Some($m_Lba_sake_rxtags_VDOM$().getId__Lorg_scalajs_dom_raw_Node__T(fr.render__O()))
+  };
   var x1 = new $c_T2(maybeOldFrag, maybeNewFrag);
   matchEnd32: {
     var p2 = $as_s_Option(x1.T2__f__1);
@@ -1545,10 +1516,10 @@ $c_Lba_sake_rxtags_VDOM$.prototype.update__Lorg_scalajs_dom_raw_Node__s_Option__
     if ((x$3 === p6)) {
       var nodes = parent.childNodes;
       var this$2 = new $c_Lorg_scalajs_dom_ext_package$PimpedNodeList(nodes);
-      var maybeExistingNode = $m_sci_Seq$().from__sc_IterableOnce__sci_Seq(this$2).find__F1__s_Option(new $c_sjsr_AnonFunction1(((this$3, maybeOldFragId$1) => ((cn$2) => ($m_Lba_sake_rxtags_VDOM$().getId__Lorg_scalajs_dom_raw_Node__T(cn$2) === maybeOldFragId$1.get__O())))(this, maybeOldFragId)));
+      var maybeExistingNode = $m_sci_Seq$().from__sc_IterableOnce__sci_Seq(this$2).find__F1__s_Option(new $c_sjsr_AnonFunction1(((this$2$1, maybeOldFragId$1) => ((cn$2) => ($m_Lba_sake_rxtags_VDOM$().hasId__Lorg_scalajs_dom_raw_Node__Z(cn$2) && ($m_Lba_sake_rxtags_VDOM$().getId__Lorg_scalajs_dom_raw_Node__T(cn$2) === maybeOldFragId$1.get__O()))))(this, maybeOldFragId)));
       if ((!maybeExistingNode.isEmpty__Z())) {
-        var arg1 = maybeExistingNode.get__O();
-        parent.removeChild(arg1)
+        var arg1$1 = maybeExistingNode.get__O();
+        parent.removeChild(arg1$1)
       };
       break matchEnd32
     };
@@ -1614,14 +1585,14 @@ $c_Lba_sake_rxtags_VDOM$.prototype.update__Lorg_scalajs_dom_raw_Node__s_Option__
         var x22 = $as_s_Some(p20);
         var newFrag$2 = $as_Lscalatags_generic_Frag(x22.s_Some__f_value);
         var nodes$1 = parent.childNodes;
-        var this$5 = new $c_Lorg_scalajs_dom_ext_package$PimpedNodeList(nodes$1);
-        var maybeExistingNode$2 = $m_sci_Seq$().from__sc_IterableOnce__sci_Seq(this$5).find__F1__s_Option(new $c_sjsr_AnonFunction1(((this$3$1, maybeOldFragId$2) => ((cn$3$2) => ($m_Lba_sake_rxtags_VDOM$().getId__Lorg_scalajs_dom_raw_Node__T(cn$3$2) === maybeOldFragId$2.get__O())))(this, maybeOldFragId)));
+        var this$4 = new $c_Lorg_scalajs_dom_ext_package$PimpedNodeList(nodes$1);
+        var maybeExistingNode$2 = $m_sci_Seq$().from__sc_IterableOnce__sci_Seq(this$4).find__F1__s_Option(new $c_sjsr_AnonFunction1(((this$4$1, maybeOldFragId$2) => ((cn$3$2) => ($m_Lba_sake_rxtags_VDOM$().hasId__Lorg_scalajs_dom_raw_Node__Z(cn$3$2) && ($m_Lba_sake_rxtags_VDOM$().getId__Lorg_scalajs_dom_raw_Node__T(cn$3$2) === maybeOldFragId$2.get__O()))))(this, maybeOldFragId)));
         var x$5 = $m_s_None$();
         if ((x$5 === maybeExistingNode$2)) {
           var x$1 = new $c_T3(("Wooooooops, no node " + maybeOldFragId), oldFrag, newFrag$2);
-          var this$7 = $m_s_Console$();
-          var this$8 = this$7.out__Ljava_io_PrintStream();
-          this$8.java$lang$JSConsoleBasedPrintStream$$printString__T__V((x$1 + "\n"))
+          var this$6 = $m_s_Console$();
+          var this$7 = this$6.out__Ljava_io_PrintStream();
+          this$7.java$lang$JSConsoleBasedPrintStream$$printString__T__V((x$1 + "\n"))
         } else {
           if ((!(maybeExistingNode$2 instanceof $c_s_Some))) {
             throw new $c_s_MatchError(maybeExistingNode$2)
@@ -1670,21 +1641,10 @@ $c_Lba_sake_rxtags_VDOM$.prototype.updateSeqFrag__Lorg_scalajs_dom_raw_Node__Lsc
   while ((i < len)) {
     var this$9 = new $c_s_PartialFunction$Lifted(oldChildrenFrags);
     var v1 = i;
-    var this$10 = this$9.apply__O__s_Option(v1);
-    var oldChildFragId;
-    if (this$10.isEmpty__Z()) {
-      oldChildFragId = $m_s_None$()
-    } else {
-      var arg1 = this$10.get__O();
-      var fr = $as_Lscalatags_generic_Frag(arg1);
-      oldChildFragId = new $c_s_Some($m_Lba_sake_rxtags_VDOM$().getId__Lorg_scalajs_dom_raw_Node__T(fr.render__O()))
-    };
-    var this$11 = new $c_s_PartialFunction$Lifted(oldChildrenFrags);
+    var $$x1 = this$9.apply__O__s_Option(v1);
+    var this$10 = new $c_s_PartialFunction$Lifted(newChildrenFrags);
     var v1$1 = i;
-    var $$x1 = this$11.apply__O__s_Option(v1$1);
-    var this$12 = new $c_s_PartialFunction$Lifted(newChildrenFrags);
-    var v1$2 = i;
-    this.update__Lorg_scalajs_dom_raw_Node__s_Option__s_Option__s_Option__V(parent, oldChildFragId, $$x1, this$12.apply__O__s_Option(v1$2));
+    this.update__Lorg_scalajs_dom_raw_Node__s_Option__s_Option__V(parent, $$x1, this$10.apply__O__s_Option(v1$1));
     i = ((1 + i) | 0)
   }
 });
@@ -5027,18 +4987,6 @@ function $isArrayOf_Lba_sake_rxtags_Directive(obj, depth) {
 function $asArrayOf_Lba_sake_rxtags_Directive(obj, depth) {
   return (($isArrayOf_Lba_sake_rxtags_Directive(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lba.sake.rxtags.Directive;", depth))
 }
-function $is_Lba_sake_rxtags_RxAttrValue(obj) {
-  return false
-}
-function $as_Lba_sake_rxtags_RxAttrValue(obj) {
-  return (($is_Lba_sake_rxtags_RxAttrValue(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "ba.sake.rxtags.RxAttrValue"))
-}
-function $isArrayOf_Lba_sake_rxtags_RxAttrValue(obj, depth) {
-  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lba_sake_rxtags_RxAttrValue)))
-}
-function $asArrayOf_Lba_sake_rxtags_RxAttrValue(obj, depth) {
-  return (($isArrayOf_Lba_sake_rxtags_RxAttrValue(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lba.sake.rxtags.RxAttrValue;", depth))
-}
 function $is_Lba_sake_rxtags_Stateful(obj) {
   return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lba_sake_rxtags_Stateful)))
 }
@@ -7923,13 +7871,11 @@ function $c_Lba_sake_rxtags_RxFrag(rxFrag) {
   this.Lba_sake_rxtags_RxFrag__f_rxFrag = null;
   this.Lba_sake_rxtags_RxFrag__f_oldFrag = null;
   this.Lba_sake_rxtags_RxFrag__f_node = null;
-  this.Lba_sake_rxtags_RxFrag__f_fragId = null;
   this.Lba_sake_rxtags_RxFrag__f_parent = null;
   this.Lba_sake_rxtags_RxFrag__f_rxFrag = rxFrag;
   var this$1 = rxFrag.Lba_sake_rxtags_Var__f_rx;
   this.Lba_sake_rxtags_RxFrag__f_oldFrag = $as_Lscalatags_generic_Frag($m_Lreactify_Val$().get__Lreactify_Val__O(this$1));
-  this.Lba_sake_rxtags_RxFrag__f_node = this.Lba_sake_rxtags_RxFrag__f_oldFrag.render__O();
-  this.Lba_sake_rxtags_RxFrag__f_fragId = $m_Lba_sake_rxtags_VDOM$().getId__Lorg_scalajs_dom_raw_Node__T(this.Lba_sake_rxtags_RxFrag__f_node)
+  this.Lba_sake_rxtags_RxFrag__f_node = this.Lba_sake_rxtags_RxFrag__f_oldFrag.render__O()
 }
 $c_Lba_sake_rxtags_RxFrag.prototype = new $h_O();
 $c_Lba_sake_rxtags_RxFrag.prototype.constructor = $c_Lba_sake_rxtags_RxFrag;
@@ -7950,10 +7896,10 @@ $c_Lba_sake_rxtags_RxFrag.prototype.update__V = (function() {
   var this$1 = this.Lba_sake_rxtags_RxFrag__f_rxFrag;
   var this$2 = this$1.Lba_sake_rxtags_Var__f_rx;
   var newFrag = $as_Lscalatags_generic_Frag($m_Lreactify_Val$().get__Lreactify_Val__O(this$2));
-  $m_Lba_sake_rxtags_VDOM$().update__Lorg_scalajs_dom_raw_Node__s_Option__s_Option__s_Option__V(this.Lba_sake_rxtags_RxFrag__f_parent, $m_s_Option$().apply__O__s_Option(this.Lba_sake_rxtags_RxFrag__f_fragId), $m_s_Option$().apply__O__s_Option(this.Lba_sake_rxtags_RxFrag__f_oldFrag), $m_s_Option$().apply__O__s_Option(newFrag));
+  $m_Lba_sake_rxtags_VDOM$().update__Lorg_scalajs_dom_raw_Node__s_Option__s_Option__V(this.Lba_sake_rxtags_RxFrag__f_parent, $m_s_Option$().apply__O__s_Option(this.Lba_sake_rxtags_RxFrag__f_oldFrag), $m_s_Option$().apply__O__s_Option(newFrag));
   this.Lba_sake_rxtags_RxFrag__f_oldFrag = newFrag;
-  this.Lba_sake_rxtags_RxFrag__f_fragId = $m_Lba_sake_rxtags_VDOM$().getId__Lorg_scalajs_dom_raw_Node__T(newFrag.render__O());
-  $m_Lba_sake_rxtags_VDOM$().setId__Lorg_scalajs_dom_raw_Node__T__V(this.Lba_sake_rxtags_RxFrag__f_node, this.Lba_sake_rxtags_RxFrag__f_fragId)
+  var newFragId = $m_Lba_sake_rxtags_VDOM$().getId__Lorg_scalajs_dom_raw_Node__T(newFrag.render__O());
+  $m_Lba_sake_rxtags_VDOM$().setId__Lorg_scalajs_dom_raw_Node__T__V(this.Lba_sake_rxtags_RxFrag__f_node, newFragId)
 });
 $c_Lba_sake_rxtags_RxFrag.prototype.toString__T = (function() {
   return (("RxFrag(" + this.Lba_sake_rxtags_RxFrag__f_oldFrag.toString__T()) + ")")
