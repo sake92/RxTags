@@ -33,7 +33,7 @@ We need to add some additional imports:</p>
 import ba.sake.rxtags._
 </code></pre>
 <p>Here is an example of a ticker, it counts the number of seconds passed:</p>
-<pre class="line-numbers" data-line="1,4,8" data-line-offset="0" data-start="1"><code class="language-scala">
+<pre class="line-numbers" data-line="1,4,10" data-line-offset="0" data-start="1"><code class="language-scala">
         val ticker$ = Var(0)
 
         dom.window.setInterval(
@@ -41,15 +41,15 @@ import ba.sake.rxtags._
           1000
         )
       
-        def content = ticker$.map { c =&gt;
-          s&quot;Ticker: $c&quot;
-        }.asFrag
+        def content = div(
+          &quot;Ticker: &quot;,
+          ticker$
+        )
       </code></pre><b>Result:</b><div class="panel panel-default"><div class="panel-body"><div id="ex5"></div></div></div><p>At line <mark>1</mark> we declare a reactive variable, <code>Var[Int]</code> with an initial value of <code>0</code>.</p>
 <p>Next, at line <mark>4</mark> we increment it, every second.</p>
-<p>Finally, at line <mark>8</mark> we <code>map</code> it to HTML.<br />
-When we <code>map</code> a <code>Var[T]</code> to a <code>Var[Frag]</code>,
-ScalaTags doesn't know how to render it to DOM.<br />
-That's why we need to call <code>asFrag</code> on it.</p>
+<p>Finally, at line <mark>10</mark> we render it to HTML.<br />
+Any <code>Var[Frag]</code> can be put just as ordinary ScalaTags! :)<br />
+There are also handy implicit conversions for <code>Var[String]</code>, <code>Var[Int]</code> (in example above) and similar.</p>
 <hr />
 <p>Here is another example, using an event handler:</p>
 <pre class="line-numbers" data-line="1,5,7,15" data-line-offset="0" data-start="1"><code class="language-scala">
@@ -59,9 +59,8 @@ That's why we need to call <code>asFrag</code> on it.</p>
           &quot;Please enter your name: &quot;,
           input(onkeyup := updateName),
           br,
-          name$.map { name =&gt;
-            s&quot;Your name: $name&quot;
-          }.asFrag
+          &quot;Your name: &quot;,
+          name$
         )
       
         def updateName: (dom.KeyboardEvent =&gt; Unit) =

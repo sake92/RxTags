@@ -722,126 +722,33 @@ var $d_O = new $TypeData().initClass({
   O: 1
 }, (void 0), (void 0), $is_O, $isArrayOf_O);
 $c_O.prototype.$classData = $d_O;
-/** @constructor */
-function $c_Lba_sake_rxtags_RxFrags$StatefulFragOps(outer, rxFrag) {
-  this.Lba_sake_rxtags_RxFrags$StatefulFragOps__f_rxFrag = null;
-  this.Lba_sake_rxtags_RxFrags$StatefulFragOps__f_$outer = null;
-  this.Lba_sake_rxtags_RxFrags$StatefulFragOps__f_rxFrag = rxFrag;
-  if ((outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.Lba_sake_rxtags_RxFrags$StatefulFragOps__f_$outer = outer
-  }
+function $f_Lba_sake_rxtags_RxFrags__statefulRxString__Lba_sake_rxtags_Stateful__Lscalatags_generic_Frag($thiz, rxString) {
+  var f = $m_Lscalatags_JsDom$all$().Lscalatags_JsDom$all$__f_StringFrag;
+  var rxFrag = rxString.map__F1__Lba_sake_rxtags_Var(f);
+  return new $c_Lba_sake_rxtags_RxFrag(rxFrag)
 }
-$c_Lba_sake_rxtags_RxFrags$StatefulFragOps.prototype = new $h_O();
-$c_Lba_sake_rxtags_RxFrags$StatefulFragOps.prototype.constructor = $c_Lba_sake_rxtags_RxFrags$StatefulFragOps;
-/** @constructor */
-function $h_Lba_sake_rxtags_RxFrags$StatefulFragOps() {
-  /*<skip>*/
-}
-$h_Lba_sake_rxtags_RxFrags$StatefulFragOps.prototype = $c_Lba_sake_rxtags_RxFrags$StatefulFragOps.prototype;
-$c_Lba_sake_rxtags_RxFrags$StatefulFragOps.prototype.asFrag__Lscalatags_generic_Frag = (function() {
-  return new $c_Lba_sake_rxtags_RxFrag(this.Lba_sake_rxtags_RxFrags$StatefulFragOps__f_rxFrag)
-});
-var $d_Lba_sake_rxtags_RxFrags$StatefulFragOps = new $TypeData().initClass({
-  Lba_sake_rxtags_RxFrags$StatefulFragOps: 0
-}, false, "ba.sake.rxtags.RxFrags$StatefulFragOps", {
-  Lba_sake_rxtags_RxFrags$StatefulFragOps: 1,
-  O: 1
-});
-$c_Lba_sake_rxtags_RxFrags$StatefulFragOps.prototype.$classData = $d_Lba_sake_rxtags_RxFrags$StatefulFragOps;
-/** @constructor */
-function $c_Lba_sake_rxtags_RxFrags$StatefulNumericOps(outer, rxNum, evidence$1) {
-  this.Lba_sake_rxtags_RxFrags$StatefulNumericOps__f_rxFrag = null;
-  this.Lba_sake_rxtags_RxFrags$StatefulNumericOps__f_$outer = null;
-  if ((outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.Lba_sake_rxtags_RxFrags$StatefulNumericOps__f_$outer = outer
-  };
+function $f_Lba_sake_rxtags_RxFrags__statefulRxNumeric__Lba_sake_rxtags_Stateful__s_math_Numeric__Lscalatags_generic_Frag($thiz, rxNum, evidence$1) {
   var f = new $c_sjsr_AnonFunction1(((this$1) => ((n$2) => {
     $m_Lscalatags_JsDom$all$();
     var v = $dp_toString__T(n$2);
     return new $c_Lscalatags_JsDom$StringFrag(v)
-  }))(this));
-  this.Lba_sake_rxtags_RxFrags$StatefulNumericOps__f_rxFrag = rxNum.map__F1__Lba_sake_rxtags_Var(f)
+  }))($thiz));
+  var rxFrag = rxNum.map__F1__Lba_sake_rxtags_Var(f);
+  return new $c_Lba_sake_rxtags_RxFrag(rxFrag)
 }
-$c_Lba_sake_rxtags_RxFrags$StatefulNumericOps.prototype = new $h_O();
-$c_Lba_sake_rxtags_RxFrags$StatefulNumericOps.prototype.constructor = $c_Lba_sake_rxtags_RxFrags$StatefulNumericOps;
-/** @constructor */
-function $h_Lba_sake_rxtags_RxFrags$StatefulNumericOps() {
-  /*<skip>*/
-}
-$h_Lba_sake_rxtags_RxFrags$StatefulNumericOps.prototype = $c_Lba_sake_rxtags_RxFrags$StatefulNumericOps.prototype;
-var $d_Lba_sake_rxtags_RxFrags$StatefulNumericOps = new $TypeData().initClass({
-  Lba_sake_rxtags_RxFrags$StatefulNumericOps: 0
-}, false, "ba.sake.rxtags.RxFrags$StatefulNumericOps", {
-  Lba_sake_rxtags_RxFrags$StatefulNumericOps: 1,
-  O: 1
-});
-$c_Lba_sake_rxtags_RxFrags$StatefulNumericOps.prototype.$classData = $d_Lba_sake_rxtags_RxFrags$StatefulNumericOps;
-/** @constructor */
-function $c_Lba_sake_rxtags_RxFrags$StatefulSeqFragOps(outer, rxSeq) {
-  this.Lba_sake_rxtags_RxFrags$StatefulSeqFragOps__f_ev = null;
-  this.Lba_sake_rxtags_RxFrags$StatefulSeqFragOps__f_rxFrag = null;
-  this.Lba_sake_rxtags_RxFrags$StatefulSeqFragOps__f_$outer = null;
-  if ((outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.Lba_sake_rxtags_RxFrags$StatefulSeqFragOps__f_$outer = outer
-  };
-  this.Lba_sake_rxtags_RxFrags$StatefulSeqFragOps__f_ev = new $c_sjsr_AnonFunction1(((this$1) => ((x$2) => {
+function $f_Lba_sake_rxtags_RxFrags__statefulRxSeq__Lba_sake_rxtags_Stateful__Lscalatags_generic_Frag($thiz, rxSeq) {
+  var ev = new $c_sjsr_AnonFunction1(((this$1) => ((x$2) => {
     var x = $as_Lscalatags_generic_Frag(x$2);
     return x
-  }))(this));
-  var f = new $c_sjsr_AnonFunction1(((this$2$1) => ((s$2) => {
+  }))($thiz));
+  var f = new $c_sjsr_AnonFunction1(((this$2$1, ev$1) => ((s$2) => {
     var s = $as_sci_Seq(s$2);
     var this$3 = $m_Lscalatags_JsDom$all$();
-    var ev = this$2$1.Lba_sake_rxtags_RxFrags$StatefulSeqFragOps__f_ev;
-    return new $c_Lscalatags_JsDom$Cap$SeqFrag(this$3, s, ev)
-  }))(this));
-  this.Lba_sake_rxtags_RxFrags$StatefulSeqFragOps__f_rxFrag = rxSeq.map__F1__Lba_sake_rxtags_Var(f)
+    return new $c_Lscalatags_JsDom$Cap$SeqFrag(this$3, s, ev$1)
+  }))($thiz, ev));
+  var rxFrag = rxSeq.map__F1__Lba_sake_rxtags_Var(f);
+  return new $c_Lba_sake_rxtags_RxFrag(rxFrag)
 }
-$c_Lba_sake_rxtags_RxFrags$StatefulSeqFragOps.prototype = new $h_O();
-$c_Lba_sake_rxtags_RxFrags$StatefulSeqFragOps.prototype.constructor = $c_Lba_sake_rxtags_RxFrags$StatefulSeqFragOps;
-/** @constructor */
-function $h_Lba_sake_rxtags_RxFrags$StatefulSeqFragOps() {
-  /*<skip>*/
-}
-$h_Lba_sake_rxtags_RxFrags$StatefulSeqFragOps.prototype = $c_Lba_sake_rxtags_RxFrags$StatefulSeqFragOps.prototype;
-var $d_Lba_sake_rxtags_RxFrags$StatefulSeqFragOps = new $TypeData().initClass({
-  Lba_sake_rxtags_RxFrags$StatefulSeqFragOps: 0
-}, false, "ba.sake.rxtags.RxFrags$StatefulSeqFragOps", {
-  Lba_sake_rxtags_RxFrags$StatefulSeqFragOps: 1,
-  O: 1
-});
-$c_Lba_sake_rxtags_RxFrags$StatefulSeqFragOps.prototype.$classData = $d_Lba_sake_rxtags_RxFrags$StatefulSeqFragOps;
-/** @constructor */
-function $c_Lba_sake_rxtags_RxFrags$StatefulStringOps(outer, rxString) {
-  this.Lba_sake_rxtags_RxFrags$StatefulStringOps__f_rxFrag = null;
-  this.Lba_sake_rxtags_RxFrags$StatefulStringOps__f_$outer = null;
-  if ((outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.Lba_sake_rxtags_RxFrags$StatefulStringOps__f_$outer = outer
-  };
-  var f = $m_Lscalatags_JsDom$all$().Lscalatags_JsDom$all$__f_StringFrag;
-  this.Lba_sake_rxtags_RxFrags$StatefulStringOps__f_rxFrag = rxString.map__F1__Lba_sake_rxtags_Var(f)
-}
-$c_Lba_sake_rxtags_RxFrags$StatefulStringOps.prototype = new $h_O();
-$c_Lba_sake_rxtags_RxFrags$StatefulStringOps.prototype.constructor = $c_Lba_sake_rxtags_RxFrags$StatefulStringOps;
-/** @constructor */
-function $h_Lba_sake_rxtags_RxFrags$StatefulStringOps() {
-  /*<skip>*/
-}
-$h_Lba_sake_rxtags_RxFrags$StatefulStringOps.prototype = $c_Lba_sake_rxtags_RxFrags$StatefulStringOps.prototype;
-var $d_Lba_sake_rxtags_RxFrags$StatefulStringOps = new $TypeData().initClass({
-  Lba_sake_rxtags_RxFrags$StatefulStringOps: 0
-}, false, "ba.sake.rxtags.RxFrags$StatefulStringOps", {
-  Lba_sake_rxtags_RxFrags$StatefulStringOps: 1,
-  O: 1
-});
-$c_Lba_sake_rxtags_RxFrags$StatefulStringOps.prototype.$classData = $d_Lba_sake_rxtags_RxFrags$StatefulStringOps;
 /** @constructor */
 function $c_Lba_sake_rxtags_ScalatagsAddons$() {
   /*<skip>*/
@@ -1807,6 +1714,33 @@ function $isArrayOf_Lba_sake_rxtags_example_Example(obj, depth) {
 function $asArrayOf_Lba_sake_rxtags_example_Example(obj, depth) {
   return (($isArrayOf_Lba_sake_rxtags_example_Example(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lba.sake.rxtags.example.Example;", depth))
 }
+/** @constructor */
+function $c_Lba_sake_rxtags_package$StatefulSeqOps(rx) {
+  this.Lba_sake_rxtags_package$StatefulSeqOps__f_rx = null;
+  this.Lba_sake_rxtags_package$StatefulSeqOps__f_rx = rx
+}
+$c_Lba_sake_rxtags_package$StatefulSeqOps.prototype = new $h_O();
+$c_Lba_sake_rxtags_package$StatefulSeqOps.prototype.constructor = $c_Lba_sake_rxtags_package$StatefulSeqOps;
+/** @constructor */
+function $h_Lba_sake_rxtags_package$StatefulSeqOps() {
+  /*<skip>*/
+}
+$h_Lba_sake_rxtags_package$StatefulSeqOps.prototype = $c_Lba_sake_rxtags_package$StatefulSeqOps.prototype;
+$c_Lba_sake_rxtags_package$StatefulSeqOps.prototype.map2__F1__Lba_sake_rxtags_Stateful = (function(f) {
+  var this$2 = this.Lba_sake_rxtags_package$StatefulSeqOps__f_rx;
+  var f$2 = new $c_sjsr_AnonFunction1(((this$1, f$1) => ((cc$2) => {
+    var cc = $as_sci_Seq(cc$2);
+    return $as_sci_Seq(cc.map__F1__O(f$1))
+  }))(this, f));
+  return this$2.map__F1__Lba_sake_rxtags_Var(f$2)
+});
+var $d_Lba_sake_rxtags_package$StatefulSeqOps = new $TypeData().initClass({
+  Lba_sake_rxtags_package$StatefulSeqOps: 0
+}, false, "ba.sake.rxtags.package$StatefulSeqOps", {
+  Lba_sake_rxtags_package$StatefulSeqOps: 1,
+  O: 1
+});
+$c_Lba_sake_rxtags_package$StatefulSeqOps.prototype.$classData = $d_Lba_sake_rxtags_package$StatefulSeqOps;
 /** @constructor */
 function $c_jl_Class(data0) {
   this.jl_Class__f_data = null;
@@ -5250,30 +5184,28 @@ function $h_Lba_sake_rxtags_example_Ex3$() {
 $h_Lba_sake_rxtags_example_Ex3$.prototype = $c_Lba_sake_rxtags_example_Ex3$.prototype;
 $c_Lba_sake_rxtags_example_Ex3$.prototype.content__Lscalatags_JsDom$TypedTag = (function() {
   var this$1 = $m_Lscalatags_JsDom$all$();
-  var $$x7 = this$1.div__Lscalatags_JsDom$TypedTag();
+  var $$x8 = this$1.div__Lscalatags_JsDom$TypedTag();
   $m_Lscalatags_JsDom$all$();
-  var $$x6 = new $c_Lscalatags_JsDom$StringFrag("Please enter your name: ");
+  var $$x7 = new $c_Lscalatags_JsDom$StringFrag("Please enter your name: ");
   var this$3 = $m_Lscalatags_JsDom$all$();
-  var $$x5 = this$3.input__Lscalatags_JsDom$TypedTag();
-  var $$x4 = $m_Lscalatags_JsDom$all$().onkeyup__Lscalatags_generic_Attr();
-  var $$x3 = this.updateName__F1();
+  var $$x6 = this$3.input__Lscalatags_JsDom$TypedTag();
+  var $$x5 = $m_Lscalatags_JsDom$all$().onkeyup__Lscalatags_generic_Attr();
+  var $$x4 = this.updateName__F1();
   var this$5 = $m_Lscalatags_JsDom$all$();
   var ev = new $c_sjsr_AnonFunction1(((this$4) => ((f$2) => {
     var f = $as_F1(f$2);
     return $m_sjs_js_Any$().fromFunction1__F1__sjs_js_Function1(f)
   }))(this));
-  var array = [$$x4.$colon$eq__O__Lscalatags_generic_AttrValue__Lscalatags_generic_AttrPair($$x3, new $c_Lscalatags_LowPriorityImplicits$$anon$2(this$5, ev))];
-  var $$x2 = $$x5.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array));
+  var array = [$$x5.$colon$eq__O__Lscalatags_generic_AttrValue__Lscalatags_generic_AttrPair($$x4, new $c_Lscalatags_LowPriorityImplicits$$anon$2(this$5, ev))];
+  var $$x3 = $$x6.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array));
   var this$9 = $m_Lscalatags_JsDom$all$();
-  var $$x1 = this$9.br__Lscalatags_JsDom$TypedTag();
-  var this$10 = $m_Lba_sake_rxtags_package$();
-  var rxString = this.Lba_sake_rxtags_example_Ex3$__f_name$.map__F1__Lba_sake_rxtags_Var(new $c_sjsr_AnonFunction1(((this$2$1) => ((name$2) => {
-    var name = $as_T(name$2);
-    return ("Your name: " + name)
-  }))(this)));
-  var this$11 = new $c_Lba_sake_rxtags_RxFrags$StatefulStringOps(this$10, rxString);
-  var array$1 = [$$x6, $$x2, $$x1, new $c_Lba_sake_rxtags_RxFrag(this$11.Lba_sake_rxtags_RxFrags$StatefulStringOps__f_rxFrag)];
-  return $$x7.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array$1))
+  var $$x2 = this$9.br__Lscalatags_JsDom$TypedTag();
+  $m_Lscalatags_JsDom$all$();
+  var $$x1 = new $c_Lscalatags_JsDom$StringFrag("Your name: ");
+  var this$11 = $m_Lba_sake_rxtags_package$();
+  var rxString = this.Lba_sake_rxtags_example_Ex3$__f_name$;
+  var array$1 = [$$x7, $$x3, $$x2, $$x1, $f_Lba_sake_rxtags_RxFrags__statefulRxString__Lba_sake_rxtags_Stateful__Lscalatags_generic_Frag(this$11, rxString)];
+  return $$x8.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array$1))
 });
 $c_Lba_sake_rxtags_example_Ex3$.prototype.updateName__F1 = (function() {
   return new $c_sjsr_AnonFunction1(((this$1) => ((e$2) => {
@@ -5315,17 +5247,16 @@ $h_Lba_sake_rxtags_example_Ex4$.prototype = $c_Lba_sake_rxtags_example_Ex4$.prot
 $c_Lba_sake_rxtags_example_Ex4$.prototype.content__Lscalatags_JsDom$TypedTag = (function() {
   var this$1 = $m_Lscalatags_JsDom$all$();
   var $$x12 = this$1.div__Lscalatags_JsDom$TypedTag();
-  var this$8 = $m_Lba_sake_rxtags_package$();
   var rxFrag = this.Lba_sake_rxtags_example_Ex4$__f_counter$.map__F1__Lba_sake_rxtags_Var(new $c_sjsr_AnonFunction1(((this$2) => ((c$2) => {
     var c = $uI(c$2);
     var this$3 = $m_Lscalatags_JsDom$all$();
-    var $$x11 = this$3.h4__Lscalatags_JsDom$TypedTag();
+    var $$x10 = this$3.h4__Lscalatags_JsDom$TypedTag();
     $m_Lscalatags_JsDom$all$();
     var v = ("Reactive counter: " + c);
     var array = [new $c_Lscalatags_JsDom$StringFrag(v)];
-    return $$x11.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array))
+    return $$x10.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array))
   }))(this)));
-  var $$x10 = new $c_Lba_sake_rxtags_RxFrags$StatefulFragOps(this$8, rxFrag).asFrag__Lscalatags_generic_Frag();
+  var $$x11 = new $c_Lba_sake_rxtags_RxFrag(rxFrag);
   var this$9 = $m_Lscalatags_JsDom$all$();
   var $$x9 = this$9.button__Lscalatags_JsDom$TypedTag();
   var $$x8 = $m_Lscalatags_JsDom$all$().onclick__Lscalatags_generic_Attr();
@@ -5351,7 +5282,7 @@ $c_Lba_sake_rxtags_example_Ex4$.prototype.content__Lscalatags_JsDom$TypedTag = (
   var array$3 = [$$x3.$colon$eq__O__Lscalatags_generic_AttrValue__Lscalatags_generic_AttrPair($$x2, new $c_Lscalatags_LowPriorityImplicits$$anon$2(this$19, ev$1))];
   var $$x1 = $$x4.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array$3));
   var array$4 = [($m_Lscalatags_JsDom$all$(), new $c_Lscalatags_JsDom$StringFrag("+"))];
-  var array$5 = [$$x10, $$x5, $$x1.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array$4))];
+  var array$5 = [$$x11, $$x5, $$x1.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array$4))];
   return $$x12.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array$5))
 });
 $c_Lba_sake_rxtags_example_Ex4$.prototype.add__I__F0 = (function(incr) {
@@ -5400,8 +5331,7 @@ $c_Lba_sake_rxtags_example_Ex5$.prototype.content__Lscalatags_JsDom$TypedTag = (
   var this$3 = $m_Lba_sake_rxtags_package$();
   var rxNum = this.Lba_sake_rxtags_example_Ex5$__f_ticker$;
   var evidence$1 = $m_s_math_Numeric$IntIsIntegral$();
-  var this$4 = new $c_Lba_sake_rxtags_RxFrags$StatefulNumericOps(this$3, rxNum, evidence$1);
-  var array = [$$x1, new $c_Lba_sake_rxtags_RxFrag(this$4.Lba_sake_rxtags_RxFrags$StatefulNumericOps__f_rxFrag)];
+  var array = [$$x1, $f_Lba_sake_rxtags_RxFrags__statefulRxNumeric__Lba_sake_rxtags_Stateful__s_math_Numeric__Lscalatags_generic_Frag(this$3, rxNum, evidence$1)];
   return $$x2.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array))
 });
 $c_Lba_sake_rxtags_example_Ex5$.prototype.ba$sake$rxtags$example$Ex5$$$anonfun$new$1__O = (function() {
@@ -5431,7 +5361,7 @@ function $c_Lba_sake_rxtags_example_Ex6$() {
   $n_Lba_sake_rxtags_example_Ex6$ = this;
   var initValue = new $c_sjsr_AnonFunction0(((this$1) => (() => {
     $m_sci_List$();
-    var array = [new $c_Lba_sake_rxtags_example_Ex6$CartItem(10, "eggs"), new $c_Lba_sake_rxtags_example_Ex6$CartItem(1, "milk"), new $c_Lba_sake_rxtags_example_Ex6$CartItem(3, "bananas"), new $c_Lba_sake_rxtags_example_Ex6$CartItem(2, "icecreams")];
+    var array = [new $c_Lba_sake_rxtags_example_Ex6$CartItem(10, "eggs"), new $c_Lba_sake_rxtags_example_Ex6$CartItem(1, "milk"), new $c_Lba_sake_rxtags_example_Ex6$CartItem(3, "bananas"), new $c_Lba_sake_rxtags_example_Ex6$CartItem(2, "ice creams")];
     var elems = $ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array);
     return $m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(elems)
   }))(this));
@@ -5448,56 +5378,37 @@ $c_Lba_sake_rxtags_example_Ex6$.prototype.content__Lscalatags_JsDom$TypedTag = (
   var this$1 = $m_Lscalatags_JsDom$all$();
   var $$x9 = this$1.ul__Lscalatags_JsDom$TypedTag();
   var this$25 = $m_Lba_sake_rxtags_package$();
-  var rxSeq = this.Lba_sake_rxtags_example_Ex6$__f_cartItems$.map__F1__Lba_sake_rxtags_Var(new $c_sjsr_AnonFunction1(((this$2) => ((items$2) => {
-    var items = $as_sci_List(items$2);
-    var f$1 = ((this$3) => ((item$2) => {
-      var item = $as_Lba_sake_rxtags_example_Ex6$CartItem(item$2);
-      var this$4 = $m_Lscalatags_JsDom$all$();
-      var $$x8 = this$4.li__Lscalatags_JsDom$TypedTag();
-      var this$5 = $m_Lscalatags_JsDom$all$();
-      var $$x7 = this$5.b__Lscalatags_JsDom$TypedTag();
-      $m_Lscalatags_JsDom$all$();
-      var v = item.Lba_sake_rxtags_example_Ex6$CartItem__f_count;
-      var v$1 = ("" + v);
-      var array = [new $c_Lscalatags_JsDom$StringFrag(v$1)];
-      var $$x6 = $$x7.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array));
-      $m_Lscalatags_JsDom$all$();
-      var v$2 = ((" " + item.Lba_sake_rxtags_example_Ex6$CartItem__f_name) + " ");
-      var $$x5 = new $c_Lscalatags_JsDom$StringFrag(v$2);
-      var this$12 = $m_Lscalatags_JsDom$all$();
-      var $$x4 = this$12.button__Lscalatags_JsDom$TypedTag();
-      var $$x3 = $m_Lscalatags_JsDom$all$().onclick__Lscalatags_generic_Attr();
-      var $$x2 = $m_Lba_sake_rxtags_example_Ex6$().delete__Lba_sake_rxtags_example_Ex6$CartItem__F1(item);
-      var this$14 = $m_Lscalatags_JsDom$all$();
-      var ev = new $c_sjsr_AnonFunction1(((this$13) => ((f$2) => {
-        var f = $as_F1(f$2);
-        return $m_sjs_js_Any$().fromFunction1__F1__sjs_js_Function1(f)
-      }))(this$3));
-      var array$1 = [$$x3.$colon$eq__O__Lscalatags_generic_AttrValue__Lscalatags_generic_AttrPair($$x2, new $c_Lscalatags_LowPriorityImplicits$$anon$2(this$14, ev))];
-      var $$x1 = $$x4.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array$1));
-      var array$2 = [($m_Lscalatags_JsDom$all$(), new $c_Lscalatags_JsDom$StringFrag("Delete"))];
-      var array$3 = [$$x6, $$x5, $$x1.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array$2))];
-      return $$x8.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array$3))
-    }))(this$2);
-    if ((items === $m_sci_Nil$())) {
-      return $m_sci_Nil$()
-    } else {
-      var arg1 = items.head__O();
-      var h = new $c_sci_$colon$colon(f$1(arg1), $m_sci_Nil$());
-      var t = h;
-      var rest = $as_sci_List(items.tail__O());
-      while ((rest !== $m_sci_Nil$())) {
-        var arg1$1 = rest.head__O();
-        var nx = new $c_sci_$colon$colon(f$1(arg1$1), $m_sci_Nil$());
-        t.sci_$colon$colon__f_next = nx;
-        t = nx;
-        rest = $as_sci_List(rest.tail__O())
-      };
-      return h
-    }
+  var rx = this.Lba_sake_rxtags_example_Ex6$__f_cartItems$;
+  var rxSeq = new $c_Lba_sake_rxtags_package$StatefulSeqOps(rx).map2__F1__Lba_sake_rxtags_Stateful(new $c_sjsr_AnonFunction1(((this$3) => ((item$2) => {
+    var item = $as_Lba_sake_rxtags_example_Ex6$CartItem(item$2);
+    var this$4 = $m_Lscalatags_JsDom$all$();
+    var $$x8 = this$4.li__Lscalatags_JsDom$TypedTag();
+    var this$5 = $m_Lscalatags_JsDom$all$();
+    var $$x7 = this$5.b__Lscalatags_JsDom$TypedTag();
+    $m_Lscalatags_JsDom$all$();
+    var v = item.Lba_sake_rxtags_example_Ex6$CartItem__f_count;
+    var v$1 = ("" + v);
+    var array = [new $c_Lscalatags_JsDom$StringFrag(v$1)];
+    var $$x6 = $$x7.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array));
+    $m_Lscalatags_JsDom$all$();
+    var v$2 = ((" " + item.Lba_sake_rxtags_example_Ex6$CartItem__f_name) + " ");
+    var $$x5 = new $c_Lscalatags_JsDom$StringFrag(v$2);
+    var this$12 = $m_Lscalatags_JsDom$all$();
+    var $$x4 = this$12.button__Lscalatags_JsDom$TypedTag();
+    var $$x3 = $m_Lscalatags_JsDom$all$().onclick__Lscalatags_generic_Attr();
+    var $$x2 = $m_Lba_sake_rxtags_example_Ex6$().delete__Lba_sake_rxtags_example_Ex6$CartItem__F1(item);
+    var this$14 = $m_Lscalatags_JsDom$all$();
+    var ev = new $c_sjsr_AnonFunction1(((this$13) => ((f$2) => {
+      var f = $as_F1(f$2);
+      return $m_sjs_js_Any$().fromFunction1__F1__sjs_js_Function1(f)
+    }))(this$3));
+    var array$1 = [$$x3.$colon$eq__O__Lscalatags_generic_AttrValue__Lscalatags_generic_AttrPair($$x2, new $c_Lscalatags_LowPriorityImplicits$$anon$2(this$14, ev))];
+    var $$x1 = $$x4.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array$1));
+    var array$2 = [($m_Lscalatags_JsDom$all$(), new $c_Lscalatags_JsDom$StringFrag("Delete"))];
+    var array$3 = [$$x6, $$x5, $$x1.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array$2))];
+    return $$x8.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array$3))
   }))(this)));
-  var this$26 = new $c_Lba_sake_rxtags_RxFrags$StatefulSeqFragOps(this$25, rxSeq);
-  var array$4 = [new $c_Lba_sake_rxtags_RxFrag(this$26.Lba_sake_rxtags_RxFrags$StatefulSeqFragOps__f_rxFrag)];
+  var array$4 = [$f_Lba_sake_rxtags_RxFrags__statefulRxSeq__Lba_sake_rxtags_Stateful__Lscalatags_generic_Frag(this$25, rxSeq)];
   return $$x9.apply__sci_Seq__Lscalatags_JsDom$TypedTag($ct_sjsr_WrappedVarArgs__sjs_js_Array__(new $c_sjsr_WrappedVarArgs(), array$4))
 });
 $c_Lba_sake_rxtags_example_Ex6$.prototype.delete__Lba_sake_rxtags_example_Ex6$CartItem__F1 = (function(item) {
