@@ -8,14 +8,14 @@ class TodoService {
 
   val todos$ = initTodos()
   val filter$ = Var(TodoFilter.All)
-  val toggleAllState$ = Var(false)
+  val toggleAll$ = Var(false)
   val editId$ = Var(Option.empty[UUID])
 
   todos$.attachAndFire { todos =>
     if (todos.length == 1) // synchronize with last element..
-      toggleAllState$.set(todos.head.completed)
+      toggleAll$.set(todos.head.completed)
     else if (todos.length > 1)
-      toggleAllState$.set(todos.forall(_.completed))
+      toggleAll$.set(todos.forall(_.completed))
   }
 
   def add(todo: Todo): Unit =
@@ -32,8 +32,8 @@ class TodoService {
     todos$.set(it => it.filterNot(_.completed))
 
   def toggleAll(): Unit = {
-    toggleAllState$.set(s => !s)
-    val ts = toggleAllState$.now
+    toggleAll$.set(s => !s)
+    val ts = toggleAll$.now
     todos$.set { todos =>
       todos.map(_.copy(completed = ts))
     }

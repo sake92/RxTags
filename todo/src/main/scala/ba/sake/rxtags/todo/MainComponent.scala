@@ -17,7 +17,7 @@ class MainComponent(todoService: TodoService, router: Router) extends Component 
 
   private val mainDisplay$ = todos$.map(todos => if (todos.isEmpty) "none" else "block")
   private val clearCompletedDisplay$ = todos$.map(todos => if (todos.exists(_.completed)) "block" else "none")
-  private val toggleAllChecked$ = Val { Option.when(todoService.toggleAllState$.now)("checked") }
+  private val toggleAllChecked$ = Val { Option.when(todoService.toggleAll$.now)("checked") }
 
   def asElement =
     div(
